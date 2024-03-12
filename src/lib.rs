@@ -1,5 +1,5 @@
 pub mod client;
 mod models;
 
-pub use client::{get_auth_cookies, perform_authorization};
-pub use models::{AuthCookiesBody, AuthRequestBody};
+pub use client::ValorantClient;
+pub use models::EntitlementsTokenResponse;

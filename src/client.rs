@@ -1,49 +1,46 @@
-use crate::models::{AuthCookiesBody, AuthRequestBody};
-use reqwest::{header, Client};
+use crate::models::EntitlementsTokenResponse;
+use base64;
+use base64::{engine::general_purpose::STANDARD, Engine};
+use reqwest::{Client as HttpClient, Error};
 
-pub async fn get_auth_cookies() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new();
-    let auth_cookies_body = AuthCookiesBody {
-        client_id: "play-valorant-web-prod".to_string(),
-        nonce: "1".to_string(),
-        redirect_uri: "https://playvalorant.com/opt_in".to_string(),
-        response_type: "token id_token".to_string(),
-        scope: "account openid".to_string(),
-    };
-
-    let _res = client
-        .post("https://auth.riotgames.com/api/v1/authorization")
-        .header(header::CONTENT_TYPE, "application/json")
-        .json(&auth_cookies_body)
-        .send()
-        .await?;
-
-    // Handle the response, e.g., extract the cookie
-    Ok(())
+pub struct ValorantClient {
+    pub client: HttpClient,
+    pub base_url: String,
+    pub lockfile_password: String,
+    pub port: u16,
 }
 
-pub async fn perform_authorization(
-    username: String,
-    password: String,
-    remember: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new();
-    let auth_request_body = AuthRequestBody {
-        auth_type: "auth".to_string(),
-        username,
-        password,
-        remember,
-        language: "en_US".to_string(),
-    };
+impl ValorantClient {
+    pub async fn new(lockfile_password: String, port: u16) -> Self {
+        ValorantClient {
+            client: HttpClient::new(),
+            base_url: format!("https://127.0.0.1:{}", port),
+            lockfile_password,
+            port,
+        }
+    }
 
-    let _res = client
-        .post("https://auth.riotgames.com/api/v1/authorization")
-        .header(header::CONTENT_TYPE, "application/json")
-        // Add the cookie to the request
-        .json(&auth_request_body)
-        .send()
-        .await?;
+    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse, Error> {
+        let url = format!("{}/entitlements/v1/token", self.base_url);
+        let auth_value = format!(
+            "Basic {}",
+            STANDARD.encode(format!("riot:{}", self.lockfile_password))
+        );
+        self.client
+            .get(&url)
+            .header("Authorization", auth_value)
+            .send()
+            .await?
+            .json::<EntitlementsTokenResponse>()
+            .await
+    }
 
-    // Handle the response
-    Ok(())
+    pub fn parse_lockfile_content(content: &str) -> (String, u16) {
+        let parts: Vec<&str> = content.split(':').collect();
+        if parts.len() >= 4 {
+            (parts[3].to_string(), parts[2].parse::<u16>().unwrap_or(0))
+        } else {
+            (String::new(), 0)
+        }
+    }
 }

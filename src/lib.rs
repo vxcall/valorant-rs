@@ -1,5 +1,5 @@
 pub mod client;
 mod models;
 
-pub use client::ValorantClient;
+pub use client::ValorantAuthClient;
 pub use models::EntitlementsTokenResponse;

@@ -3,16 +3,16 @@ use base64;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use reqwest::{Client as HttpClient, Error};
 
-pub struct ValorantClient {
+pub struct ValorantAuthClient {
     pub client: HttpClient,
     pub base_url: String,
     pub lockfile_password: String,
     pub port: u16,
 }
 
-impl ValorantClient {
+impl ValorantAuthClient {
     pub async fn new(lockfile_password: String, port: u16) -> Self {
-        ValorantClient {
+        ValorantAuthClient {
             client: HttpClient::new(),
             base_url: format!("https://127.0.0.1:{}", port),
             lockfile_password,

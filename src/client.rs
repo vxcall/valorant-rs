@@ -1,9 +1,10 @@
 use std::path::PathBuf;
+use anyhow::{ Result, anyhow };
 
 use crate::models::EntitlementsTokenResponse;
 use base64;
-use base64::{engine::general_purpose::STANDARD, Engine};
-use reqwest::{Client as HttpClient, Error, ClientBuilder};
+use base64::{ engine::general_purpose::STANDARD, Engine };
+use reqwest::{ Client as HttpClient, ClientBuilder };
 use dirs;
 
 pub struct ValorantAuthClient {
@@ -14,9 +15,9 @@ pub struct ValorantAuthClient {
 }
 
 impl ValorantAuthClient {
-     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+     pub fn new() -> Result<Self> {
         let (lockfile_password, port) = Self::parse_lockfile_content()
-            .ok_or("Unable to parse lockfile content")?;
+            .ok_or(anyhow!("Unable to parse lockfile content"))?;
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
             .build()?;
@@ -28,19 +29,25 @@ impl ValorantAuthClient {
         })
     }
 
-    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse, Error> {
+    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse> {
         let url = format!("{}/entitlements/v1/token", self.base_url);
         let auth_value = format!(
             "Basic {}",
             STANDARD.encode(format!("riot:{}", self.lockfile_password))
         );
-        self.client
+        let response = self.client
             .get(&url)
             .header("Authorization", auth_value)
             .send()
-            .await?
+            .await
+            .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
+
+        let token_response = response
             .json::<EntitlementsTokenResponse>()
             .await
+            .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
+
+        Ok(token_response)
     }
 
     fn get_lockfile_path() -> Option<PathBuf> {
@@ -66,4 +73,3 @@ impl ValorantAuthClient {
         None
     }
 }
-

@@ -9,3 +9,15 @@ pub struct EntitlementsTokenResponse {
     pub subject: String,                      // Player uuid
     pub token: String,                        // entitlement token
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+struct RiotGeoResponse {
+    token: String,
+    affinities: Affinities,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Affinities {
+    pbe: String,
+    live: String,
+}

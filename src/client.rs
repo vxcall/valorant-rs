@@ -4,6 +4,7 @@ use crate::models::EntitlementsTokenResponse;
 use base64;
 use base64::{engine::general_purpose::STANDARD, Engine};
 use reqwest::{Client as HttpClient, Error, ClientBuilder};
+use dirs;
 
 pub struct ValorantAuthClient {
     pub client: HttpClient,
@@ -13,17 +14,18 @@ pub struct ValorantAuthClient {
 }
 
 impl ValorantAuthClient {
-    pub async fn new(lockfile_password: String, port: u16) -> Self {
+     pub fn new() -> Result<Self, Box<dyn std::error::Error>> {
+        let (lockfile_password, port) = Self::parse_lockfile_content()
+            .ok_or("Unable to parse lockfile content")?;
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
-            .build()
-            .expect("Failed to build HTTP client");
-        ValorantAuthClient {
+            .build()?;
+        Ok(ValorantAuthClient {
             client,
             base_url: format!("https://127.0.0.1:{}", port),
             lockfile_password,
             port,
-        }
+        })
     }
 
     pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse, Error> {
@@ -50,15 +52,18 @@ impl ValorantAuthClient {
         }
     }
 
-    pub fn parse_lockfile_content() -> (String, u16) {
+    pub fn parse_lockfile_content() -> Option<(String, u16)> {
         if let Some(lockfile_path) = Self::get_lockfile_path() {
             if let Ok(content) = std::fs::read_to_string(lockfile_path) {
                 let parts: Vec<&str> = content.split(':').collect();
                 if parts.len() >= 4 {
-                    return (parts[3].to_string(), parts[2].parse::<u16>().unwrap_or(0));
+                    let lockfile_password = parts[3].to_string();
+                    let port = parts[2].parse::<u16>().unwrap_or(0);
+                    return Some((lockfile_password, port));
                 }
             }
         }
-        (String::new(), 0)
+        None
     }
 }
+

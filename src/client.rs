@@ -1,54 +1,26 @@
-use std::path::PathBuf;
 use anyhow::{ Result, anyhow };
-
-use crate::models::EntitlementsTokenResponse;
-use base64;
-use base64::{ engine::general_purpose::STANDARD, Engine };
+use crate::api_config::ApiConfig;
 use reqwest::{ Client as HttpClient, ClientBuilder };
+use std::path::PathBuf;
 use dirs;
-
-pub struct ValorantAuthClient {
+pub struct ValorantClient {
     pub client: HttpClient,
-    pub base_url: String,
-    pub lockfile_password: String,
-    pub port: u16,
+    pub config: ApiConfig,
 }
 
-impl ValorantAuthClient {
-     pub fn new() -> Result<Self> {
-        let (lockfile_password, port) = Self::parse_lockfile_content()
+impl ValorantClient {
+     pub fn new(shard: String, region: String) -> Result<Self> {
+        let (lockfile_password, port) = Self::get_lockfile_content()
             .ok_or(anyhow!("Unable to parse lockfile content"))?;
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
             .build()?;
-        Ok(ValorantAuthClient {
+        Ok(ValorantClient {
             client,
-            base_url: format!("https://127.0.0.1:{}", port),
-            lockfile_password,
-            port,
+            config: ApiConfig { shard, region, port, lockfile_password }
         })
     }
 
-    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse> {
-        let url = format!("{}/entitlements/v1/token", self.base_url);
-        let auth_value = format!(
-            "Basic {}",
-            STANDARD.encode(format!("riot:{}", self.lockfile_password))
-        );
-        let response = self.client
-            .get(&url)
-            .header("Authorization", auth_value)
-            .send()
-            .await
-            .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
-
-        let token_response = response
-            .json::<EntitlementsTokenResponse>()
-            .await
-            .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
-
-        Ok(token_response)
-    }
 
     fn get_lockfile_path() -> Option<PathBuf> {
         if let Some(mut appdata_local) = dirs::data_local_dir() {
@@ -59,7 +31,7 @@ impl ValorantAuthClient {
         }
     }
 
-    pub fn parse_lockfile_content() -> Option<(String, u16)> {
+    fn get_lockfile_content() -> Option<(String, u16)> {
         if let Some(lockfile_path) = Self::get_lockfile_path() {
             if let Ok(content) = std::fs::read_to_string(lockfile_path) {
                 let parts: Vec<&str> = content.split(':').collect();

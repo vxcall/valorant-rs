@@ -1,13 +1,10 @@
 use tokio;
-use valorant_rs::ValorantAuthClient;
+use valorant_rs::ValorantClient;
 
 #[tokio::main]
 async fn main() {
-    let client = ValorantAuthClient::new().expect("client generation failed");
-    let response = client.get_entitlements_token().await;
-
-    match response {
-        Ok(token_response) => println!("auth response ----> {:?}", token_response),
-        Err(e) => println!("Error fetching token: {:?}\nAre you sure Valorant is running right now?", e),
-    }
+    let client = ValorantClient::new(String::from("ap"), String::from("ap")).expect("Client generation failed");
+    let token_response = client.get_entitlements_token().await.unwrap();
+    let match_response = client.get_current_game_player(token_response.entitlement_token, token_response.auth_token, token_response.puuid).await.unwrap();
+    println!("{:#?}", match_response);
 }

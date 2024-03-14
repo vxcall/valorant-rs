@@ -1,9 +1,9 @@
 use tokio;
-use valorant_rs::ValorantAuthClient;
+use valorant_rs::ValorantClient;
 
 #[tokio::main]
 async fn main() {
-    let client = ValorantAuthClient::new().expect("Client generation failed");
+    let client = ValorantClient::new(String::from("ap"), String::from("ap")).expect("Client generation failed");
     let response = client.get_entitlements_token().await;
 
     match response {

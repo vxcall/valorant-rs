@@ -6,16 +6,16 @@ use base64;
 use crate::client::ValorantClient;
 
 impl ValorantClient {
-    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse> {
+    pub async fn init_tokens(mut self) -> Result<Self> {
         let endpoint = Endpoint::EntitlementsToken;
         let url = endpoint.url(&self.config);
-        let auth_value = format!(
+        let header_value = format!(
             "Basic {}",
             STANDARD.encode(format!("riot:{}", self.config.lockfile_password))
         );
         let response = self.client
             .get(&url)
-            .header("Authorization", auth_value)
+            .header("Authorization", header_value)
             .send()
             .await
             .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
@@ -25,6 +25,10 @@ impl ValorantClient {
             .await
             .map_err(|e| anyhow::Error::from(e))?; // Convert reqwest::Error to anyhow::Error
 
-        Ok(token_response)
+        self.config.entitlement_token = token_response.entitlement_token;
+        self.config.auth_token = token_response.auth_token;
+        self.config.puuid = token_response.puuid;
+
+        Ok(self)
     }
 }

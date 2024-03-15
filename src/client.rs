@@ -3,6 +3,8 @@ use crate::api_config::ApiConfig;
 use reqwest::{ Client as HttpClient, ClientBuilder };
 use std::path::PathBuf;
 use dirs;
+
+#[derive(Debug)]
 pub struct ValorantClient {
     pub client: HttpClient,
     pub config: ApiConfig,
@@ -17,7 +19,7 @@ impl ValorantClient {
             .build()?;
         Ok(ValorantClient {
             client,
-            config: ApiConfig { shard, region, port, lockfile_password }
+            config: ApiConfig { shard, region, port, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
         })
     }
 

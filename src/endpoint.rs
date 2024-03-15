@@ -1,14 +1,14 @@
 use crate::api_config::ApiConfig;
 
-pub(crate) enum Endpoint {
+pub(crate) enum Endpoint<'a> {
     ContentService, // shared
-    PlayerMMR { puuid: String }, // pd
-    CurrentGamePlayer { puuid: String }, // glz
-    CurrentGameLoadouts { current_game_match_id: String }, // glz
+    PlayerMMR { puuid: &'a str }, // pd
+    CurrentGamePlayer { puuid: &'a str }, // glz
+    CurrentGameLoadouts { current_game_match_id: &'a str }, // glz
     EntitlementsToken, // 127
 }
 
-impl Endpoint {
+impl<'a> Endpoint<'a> {
     pub fn url(&self, config: &ApiConfig) -> String {
         match self {
             Endpoint::ContentService => {

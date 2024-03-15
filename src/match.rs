@@ -25,8 +25,8 @@ impl ValorantClient {
         Ok(response)
     }
 
-    pub async fn get_current_game_loadouts(&self, match_id: String) -> Result<CurrentGameLoadoutsResponse> {
-        let endpoint = Endpoint::CurrentGameLoadouts { current_game_match_id: &match_id };
+    pub async fn get_current_game_loadouts(&self, match_id: &str) -> Result<CurrentGameLoadoutsResponse> {
+        let endpoint = Endpoint::CurrentGameLoadouts { current_game_match_id: match_id };
         let url = endpoint.url(&self.config);
 
         let response = self.client

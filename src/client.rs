@@ -3,6 +3,8 @@ use crate::api_config::ApiConfig;
 use reqwest::{ Client as HttpClient, ClientBuilder };
 use std::path::PathBuf;
 use dirs;
+use std::fs;
+use regex::Regex;
 
 #[derive(Debug)]
 pub struct ValorantClient {
@@ -11,30 +13,30 @@ pub struct ValorantClient {
 }
 
 impl ValorantClient {
-     pub fn new(shard: String, region: String) -> Result<Self> {
-        let (lockfile_password, port) = Self::get_lockfile_content()
-            .ok_or(anyhow!("Unable to parse lockfile content"))?;
+     pub fn new() -> Result<Self> {
+        let (lockfile_password, port) = Self::extract_lockfile_content()
+            .ok_or(anyhow!("Unable to extract lockfile content"))?;
+        let (region, shard) = Self::extract_region_and_shard().ok_or(anyhow!("Unable to extract region and shard from ShooterGame.log"))?;
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
             .build()?;
         Ok(ValorantClient {
             client,
-            config: ApiConfig { shard, region, port, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
+            config: ApiConfig { region, shard, port, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
         })
     }
 
-
-    fn get_lockfile_path() -> Option<PathBuf> {
+    fn create_appdata_local_path(path: &str) -> Option<PathBuf> {
         if let Some(mut appdata_local) = dirs::data_local_dir() {
-            appdata_local.push("Riot Games\\Riot Client\\Config\\lockfile");
+            appdata_local.push(path);
             Some(appdata_local)
         } else {
             None
         }
     }
 
-    fn get_lockfile_content() -> Option<(String, u16)> {
-        if let Some(lockfile_path) = Self::get_lockfile_path() {
+    fn extract_lockfile_content() -> Option<(String, u16)> {
+        if let Some(lockfile_path) = Self::create_appdata_local_path("Riot Games\\Riot Client\\Config\\lockfile") {
             if let Ok(content) = std::fs::read_to_string(lockfile_path) {
                 let parts: Vec<&str> = content.split(':').collect();
                 if parts.len() >= 4 {
@@ -46,4 +48,22 @@ impl ValorantClient {
         }
         None
     }
+
+    fn extract_region_and_shard() -> Option<(String, String)> {
+        if let Some(log_file_path) = Self::create_appdata_local_path("VALORANT\\Saved\\Logs\\ShooterGame.log") {
+            if let Ok(contents) = fs::read_to_string(log_file_path) {
+                let regex = Regex::new(r"glz-(.+?)-1\.(.+?)\.a\.pvp\.net").unwrap();
+
+                if let Some(caps) = regex.captures(&contents) {
+                    if caps.len() == 3 {
+                        let region = caps.get(1).map_or("", |m| m.as_str()).to_string();
+                        let shard = caps.get(2).map_or("", |m| m.as_str()).to_string();
+                        return Some((region, shard));
+                    }
+                }
+            }
+        }
+        None
+    }
+
 }

@@ -1,12 +1,12 @@
 use anyhow::{ Result, anyhow };
 use crate::api_config::ApiConfig;
-use reqwest::{ Client as HttpClient, ClientBuilder };
+use reqwest::{ Client as HttpClient, ClientBuilder, Method, Response };
 use std::path::PathBuf;
 use dirs;
 use std::fs;
 use regex::Regex;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ValorantClient {
     pub client: HttpClient,
     pub config: ApiConfig,
@@ -26,9 +26,19 @@ impl ValorantClient {
         })
     }
 
-    fn create_appdata_local_path(path: &str) -> Option<PathBuf> {
+    pub(crate) async fn send_request(&self, method: Method, url: &str) -> Result<Response> {
+        let client = &self.client;
+        let request = client.request(method, url)
+            .header("Authorization", format!("Bearer {}", self.config.auth_token))
+            .header("X-Riot-Entitlements-JWT", &self.config.entitlement_token);
+
+        let response = request.send().await.map_err(anyhow::Error::from)?;
+        Ok(response)
+    }
+
+    fn create_appdata_local_path<T>(path: T) -> Option<PathBuf> where T: Into<String> {
         if let Some(mut appdata_local) = dirs::data_local_dir() {
-            appdata_local.push(path);
+            appdata_local.push(path.into());
             Some(appdata_local)
         } else {
             None

@@ -4,6 +4,7 @@ pub(crate) enum Endpoint<'a> {
     ContentService, // shared
     PlayerMMR { puuid: &'a str }, // pd
     CurrentGamePlayer { puuid: &'a str }, // glz
+    CurrentGameMatch { current_game_match_id: &'a str },
     CurrentGameLoadouts { current_game_match_id: &'a str }, // glz
     EntitlementsToken, // 127
 }
@@ -19,6 +20,9 @@ impl<'a> Endpoint<'a> {
             },
             Endpoint::CurrentGamePlayer { puuid } => {
                 format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/players/{}", config.region, config.shard, puuid)
+            },
+            Endpoint::CurrentGameMatch { current_game_match_id } => {
+                format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/matches/{}", config.region, config.shard, current_game_match_id)
             },
             Endpoint::CurrentGameLoadouts { current_game_match_id } => {
                 format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/matches/{}/loadouts", config.region, config.shard, current_game_match_id)

@@ -1,8 +1,10 @@
-pub mod client;
 mod models;
 mod api_config;
 mod endpoint;
 mod auth;
-pub mod r#match;
+pub mod client;
+pub mod current_game;
+pub mod store;
+
 
 pub use client::ValorantClient;

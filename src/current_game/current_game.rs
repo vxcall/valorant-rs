@@ -1,6 +1,6 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use crate::models::{CurrentGameLoadoutsResponse, CurrentGameMatchResponse, CurrentGamePlayerResponse};
+use super::models::{CurrentGameLoadoutsResponse, CurrentGameMatchResponse, CurrentGamePlayerResponse};
 use reqwest::Method;
 use anyhow::Result;
 
@@ -34,5 +34,15 @@ impl ValorantClient {
         let loadouts_response = response.json::<CurrentGameLoadoutsResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(loadouts_response)
+    }
+
+    // haven't tested yet
+    pub async fn quit_current_match(&self, match_id: &str) -> Result<()> {
+        let endpoint = Endpoint::CurrentGameQuit { puuid: &self.config.puuid, current_game_match_id: match_id };
+        let url = endpoint.url(&self.config);
+
+        self.send_request(Method::POST, &url).await?;
+
+        Ok(())
     }
 }

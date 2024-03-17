@@ -1,5 +1,6 @@
 use anyhow::{ Result, anyhow };
 use crate::api_config::ApiConfig;
+use crate::endpoint::BaseUrls;
 use reqwest::{ Client as HttpClient, ClientBuilder, Method, Response };
 use std::path::PathBuf;
 use dirs;
@@ -13,16 +14,25 @@ pub struct ValorantClient {
 }
 
 impl ValorantClient {
-     pub fn new() -> Result<Self> {
+    pub fn new() -> Result<Self> {
         let (lockfile_password, port) = Self::extract_lockfile_content()
             .ok_or(anyhow!("Unable to extract lockfile content"))?;
         let (region, shard) = Self::extract_region_and_shard().ok_or(anyhow!("Unable to extract region and shard from ShooterGame.log"))?;
+        
+        let base_urls = BaseUrls {
+            shared: format!("https://shared.{}.a.pvp.net", shard),
+            pd: format!("https://pd.{}.a.pvp.net", shard),
+            glz: format!("https://glz-{}-1.{}.a.pvp.net", region, shard),
+            local: format!("https://127.0.0.1:{}", port),
+        };
+
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
             .build()?;
+        
         Ok(ValorantClient {
             client,
-            config: ApiConfig { region, shard, port, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
+            config: ApiConfig { region, shard, port, base_urls, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
         })
     }
 

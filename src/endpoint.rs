@@ -1,5 +1,13 @@
 use crate::api_config::ApiConfig;
 
+#[derive(Debug, Clone)]
+pub struct BaseUrls {
+    pub shared: String,
+    pub pd: String,
+    pub glz: String,
+    pub local: String,
+}
+
 pub(crate) enum Endpoint<'a> {
     ContentService,
     Prices,
@@ -17,34 +25,34 @@ impl<'a> Endpoint<'a> {
     pub fn url(&self, config: &ApiConfig) -> String {
         match self {
             Endpoint::ContentService => {
-                format!("https://shared.{}.a.pvp.net/content-service/v3/content", config.shard)
+                format!("{}/content-service/v3/content", config.base_urls.shared)
             },
             Endpoint::Prices => {
-                format!("https://pd.{}.a.pvp.net/store/v1/offers", config.shard)
+                format!("{}/store/v1/offers", config.base_urls.pd)
             },
             Endpoint::Storefront { puuid } => {
-                format!("https://pd.{}.a.pvp.net/store/v2/storefront/{}", config.shard, puuid)
+                format!("{}/store/v2/storefront/{}", config.base_urls.pd, puuid)
             },
             Endpoint::Wallet { puuid } => {
-                format!("https://pd.{}.a.pvp.net/store/v1/wallet/{}", config.shard, puuid)
+                format!("{}/store/v1/wallet/{}", config.base_urls.pd, puuid)
             },
-            Endpoint::OwnedItems { puuid, item_type_id} => {
-                format!("https://pd.{}.a.pvp.net/store/v1/entitlements/{}/{}", config.shard, puuid, item_type_id)
+            Endpoint::OwnedItems { puuid, item_type_id } => {
+                format!("{}/store/v1/entitlements/{}/{}", config.base_urls.pd, puuid, item_type_id)
             },
             Endpoint::CurrentGamePlayer { puuid } => {
-                format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/players/{}", config.region, config.shard, puuid)
+                format!("{}/core-game/v1/players/{}", config.base_urls.glz, puuid)
             },
             Endpoint::CurrentGameMatch { current_game_match_id } => {
-                format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/matches/{}", config.region, config.shard, current_game_match_id)
+                format!("{}/core-game/v1/matches/{}", config.base_urls.glz, current_game_match_id)
             },
             Endpoint::CurrentGameLoadouts { current_game_match_id } => {
-                format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/matches/{}/loadouts", config.region, config.shard, current_game_match_id)
+                format!("{}/core-game/v1/matches/{}/loadouts", config.base_urls.glz, current_game_match_id)
             },
             Endpoint::CurrentGameQuit { puuid, current_game_match_id } => {
-                format!("https://glz-{}-1.{}.a.pvp.net/core-game/v1/players/{}/disassociate/{}", config.region, config.shard, puuid, current_game_match_id)
+                format!("{}/core-game/v1/players/{}/disassociate/{}", config.base_urls.glz, puuid, current_game_match_id)
             },
             Endpoint::EntitlementsToken => {
-                format!("https://127.0.0.1:{}/entitlements/v1/token", config.port)
+                format!("{}/entitlements/v1/token", config.base_urls.local)
             },
         }
     }

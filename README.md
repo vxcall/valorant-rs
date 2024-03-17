@@ -4,7 +4,7 @@ A crate which offers unofficial valorant api client written in Rust.
 use this when, for instance, u want to crate a valorant discord bot in Rust.
 
 ## am i getting banned?
-[the original api's document]() mentions that:
+the original api's document mentions that:
 
 > These endpoints are not officially supported. However, as long as you use common sense and don't do anything a Riot employee would frown at, you won't get banned.
 

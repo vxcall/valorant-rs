@@ -16,6 +16,7 @@ Don't know if i cover all those tho.
 
 XMPP
 - [ ] TCP XMPP Connection
+
 PVP ENDPOINTS
 - [ ] GET Fetch Content
 - [ ] GET Account XP
@@ -29,6 +30,7 @@ PVP ENDPOINTS
 - [ ] GET Penalties
 - [ ] GET Config
 - [ ] PUT Name Service
+
 PARTY ENDPOINTS
 - [ ] GET Party
 - [ ] GET Party Player
@@ -52,11 +54,13 @@ PARTY ENDPOINTS
 - [ ] DELETE Party Disable Code
 - [ ] POST Party Generate Code
 - [ ] POST Party Join By Code
+
 STORE ENDPOINTS
 - [x] GET Prices
 - [x] GET Storefront
 - [x] GET Wallet
 - [x] GET Owned Items
+
 PRE-GAME ENDPOINTS
 - [ ] GET Pre-Game Player
 - [ ] GET Pre-Game Match
@@ -64,15 +68,18 @@ PRE-GAME ENDPOINTS
 - [ ] POST Select Character
 - [ ] POST Lock Character
 - [ ] POST Pre-Game Quit
+
 CURRENT GAME ENDPOINTS
 - [x] GET Current Game Player
 - [x] GET Current Game Match
 - [x] GET Current Game Loadouts
 - [x] POST Current Game Quit
+
 CONTRACT ENDPOINTS
 - [ ] GET Item Upgrades
 - [ ] GET Contracts
 - [ ] POST Activate Contract
+
 LOCAL ENDPOINTS
 - [ ] GET Local Help
 - [ ] GET Sessions
@@ -88,6 +95,7 @@ LOCAL ENDPOINTS
 - [ ] GET Friend Requests
 - [ ] GET Local Swagger Docs
 - [ ] WSS Local WebSocket
+
 LOCAL ENDPOINTS - CHAT
 - [ ] GET Party Chat Info
 - [ ] GET Pre-Game Chat Info
@@ -96,6 +104,7 @@ LOCAL ENDPOINTS - CHAT
 - [ ] GET Chat Participants
 - [ ] POST Send Chat
 - [ ] GET Chat History
+
 AUTHENTICATION ENDPOINTS
 - [ ] POST Auth Cookies
 - [ ] PUT Auth Request

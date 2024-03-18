@@ -5,7 +5,7 @@ pub struct BaseUrls {
     pub shared: String,
     pub pd: String,
     pub glz: String,
-    pub local: String,
+    pub localhost: String,
 }
 
 pub(crate) enum Endpoint<'a> {
@@ -14,6 +14,12 @@ pub(crate) enum Endpoint<'a> {
     Storefront { puuid: &'a str },
     Wallet { puuid: &'a str },
     OwnedItems { puuid: &'a str, item_type_id: &'a str },
+    PreGamePlayer { puuid: &'a str },
+    PreGameMatch { pre_game_match_id: &'a str },
+    PreGameLoadouts { pre_game_match_id: &'a str },
+    SelectCharacter { pre_game_match_id: &'a str, agent_id: &'a str },
+    LockCharacter { pre_game_match_id: &'a str, agent_id: &'a str },
+    PreGameQuit { pre_game_match_id: &'a str },
     CurrentGamePlayer { puuid: &'a str },
     CurrentGameMatch { current_game_match_id: &'a str },
     CurrentGameLoadouts { current_game_match_id: &'a str },
@@ -39,6 +45,24 @@ impl<'a> Endpoint<'a> {
             Endpoint::OwnedItems { puuid, item_type_id } => {
                 format!("{}/store/v1/entitlements/{}/{}", config.base_urls.pd, puuid, item_type_id)
             },
+            Endpoint::PreGamePlayer { puuid } => {
+                format!("{}/pregame/v1/players/{}", config.base_urls.glz, puuid)
+            },
+            Endpoint::PreGameMatch { pre_game_match_id } => {
+                format!("{}/pregame/v1/matches/{}", config.base_urls.glz, pre_game_match_id)
+            },
+            Endpoint::PreGameLoadouts { pre_game_match_id } => {
+                format!("{}/pregame/v1/matches/{}/loadouts", config.base_urls.glz, pre_game_match_id)
+            },
+            Endpoint::SelectCharacter { pre_game_match_id, agent_id } => {
+                format!("{}/pregame/v1/matches/{}/select/{}", config.base_urls.glz, pre_game_match_id, agent_id)
+            },
+            Endpoint::LockCharacter { pre_game_match_id, agent_id } => {
+                format!("{}/pregame/v1/matches/{}/lock/{}", config.base_urls.glz, pre_game_match_id, agent_id)
+            },
+            Endpoint::PreGameQuit { pre_game_match_id } => {
+                format!("{}/pregame/v1/matches/{}/quit", config.base_urls.glz, pre_game_match_id)
+            },
             Endpoint::CurrentGamePlayer { puuid } => {
                 format!("{}/core-game/v1/players/{}", config.base_urls.glz, puuid)
             },
@@ -52,7 +76,7 @@ impl<'a> Endpoint<'a> {
                 format!("{}/core-game/v1/players/{}/disassociate/{}", config.base_urls.glz, puuid, current_game_match_id)
             },
             Endpoint::EntitlementsToken => {
-                format!("{}/entitlements/v1/token", config.base_urls.local)
+                format!("{}/entitlements/v1/token", config.base_urls.localhost)
             },
         }
     }

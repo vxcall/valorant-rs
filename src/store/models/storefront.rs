@@ -1,37 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-// Prices-------------------------------------------------------------
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct PricesResponse {
-    offers: Vec<OfferForPrices>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-struct OfferForPrices {
-    #[serde(rename = "OfferID")]
-    offer_id: String,
-    is_direct_purchase: bool,
-    start_date: String,
-    cost: HashMap<String, f64>,
-    rewards: Vec<RewardForPrices>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-struct RewardForPrices {
-    #[serde(rename = "ItemTypeID")]
-    item_type_id: String,
-    #[serde(rename = "ItemID")]
-    item_id: String,
-    quantity: u32,
-}
-
-// Storefront-------------------------------------------------------------
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct StorefrontResponse {
@@ -95,25 +64,25 @@ struct ItemDetails {
 struct ItemOffer {
     #[serde(rename = "BundleItemOfferID")]
     bundle_item_offer_id: String,
-    offer: OfferForStorefront,
+    offer: Offer,
     discount_percent: f64,
     discounted_cost: HashMap<String, f64>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct OfferForStorefront {
+struct Offer {
     #[serde(rename = "OfferID")]
     offer_id: String,
     is_direct_purchase: bool,
     start_date: String,
     cost: HashMap<String, f64>,
-    rewards: Vec<RewardForStorefront>,
+    rewards: Vec<Reward>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct RewardForStorefront {
+struct Reward {
     #[serde(rename = "ItemTypeID")]
     item_type_id: String,
     #[serde(rename = "ItemID")]
@@ -125,7 +94,7 @@ struct RewardForStorefront {
 #[serde(rename_all = "PascalCase")]
 struct SkinsPanelLayout {
     single_item_offers: Vec<String>,
-    single_item_store_offers: Vec<OfferForStorefront>,
+    single_item_store_offers: Vec<Offer>,
     single_item_offers_remaining_duration_in_seconds: i64,
 }
 
@@ -142,7 +111,7 @@ struct UpgradeCurrencyOffer {
     offer_id: String,
     #[serde(rename = "StorefrontItemID")]
     storefront_item_id: String,
-    offer: OfferForStorefront,
+    offer: Offer,
     discounted_percent: f64,
 }
 
@@ -158,7 +127,7 @@ struct AccessoryStore {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 struct AccessoryStoreOffer {
-    offer: OfferForStorefront,
+    offer: Offer,
     #[serde(rename = "ContractID")]
     contract_id: String,
 }
@@ -175,40 +144,8 @@ struct BonusStore {
 struct BonusStoreOffer {
     #[serde(rename = "BonusOfferID")]
     bonus_offer_id: String,
-    offer: OfferForStorefront,
+    offer: Offer,
     discount_percent: f64,
     discount_costs: HashMap<String, f64>,
     is_seen: bool,
 }
-
-// Wallet-------------------------------------------------------------
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct WalletResponse {
-    balances: HashMap<String, f64>,
-}
-
-// Owned Items-------------------------------------------------------------
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-pub struct OwnedItemsResponse {
-    #[serde(rename = "ItemTypeID")]
-    item_type_id: String,
-    #[serde(rename = "Entitlements")]
-    entitlements: Vec<Entitlement>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "PascalCase")]
-struct Entitlement {
-    #[serde(rename = "TypeID")]
-    type_id: String,
-    #[serde(rename = "ItemID")]
-    item_id: String,
-    #[serde(rename = "InstanceID")]
-    instance_id: Option<String>,
-}
-
-//-------------------------------------------------------------

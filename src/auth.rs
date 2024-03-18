@@ -8,7 +8,7 @@ use crate::client::ValorantClient;
 impl ValorantClient {
     pub async fn init_tokens(mut self) -> Result<Self> {
         let endpoint = Endpoint::EntitlementsToken;
-        let url = endpoint.url(&self.config);
+        let (method, url) = endpoint.url(&self.config);
         let header_value = format!(
             "Basic {}",
             STANDARD.encode(format!("riot:{}", self.config.lockfile_password))

@@ -1,4 +1,5 @@
 use crate::api_config::ApiConfig;
+use reqwest::Method;
 
 #[derive(Debug, Clone)]
 pub struct BaseUrls {
@@ -28,55 +29,55 @@ pub(crate) enum Endpoint<'a> {
 }
 
 impl<'a> Endpoint<'a> {
-    pub fn url(&self, config: &ApiConfig) -> String {
+    pub fn url(&self, config: &ApiConfig) -> (Method, String) {
         match self {
             Endpoint::ContentService => {
-                format!("{}/content-service/v3/content", config.base_urls.shared)
+                (Method::GET, format!("{}/content-service/v3/content", config.base_urls.shared))
             },
             Endpoint::Prices => {
-                format!("{}/store/v1/offers", config.base_urls.pd)
+                (Method::GET, format!("{}/store/v1/offers", config.base_urls.pd))
             },
             Endpoint::Storefront { puuid } => {
-                format!("{}/store/v2/storefront/{}", config.base_urls.pd, puuid)
+                (Method::GET, format!("{}/store/v2/storefront/{}", config.base_urls.pd, puuid))
             },
             Endpoint::Wallet { puuid } => {
-                format!("{}/store/v1/wallet/{}", config.base_urls.pd, puuid)
+                (Method::GET, format!("{}/store/v1/wallet/{}", config.base_urls.pd, puuid))
             },
             Endpoint::OwnedItems { puuid, item_type_id } => {
-                format!("{}/store/v1/entitlements/{}/{}", config.base_urls.pd, puuid, item_type_id)
+                (Method::GET, format!("{}/store/v1/entitlements/{}/{}", config.base_urls.pd, puuid, item_type_id))
             },
             Endpoint::PreGamePlayer { puuid } => {
-                format!("{}/pregame/v1/players/{}", config.base_urls.glz, puuid)
+                (Method::GET, format!("{}/pregame/v1/players/{}", config.base_urls.glz, puuid))
             },
             Endpoint::PreGameMatch { pre_game_match_id } => {
-                format!("{}/pregame/v1/matches/{}", config.base_urls.glz, pre_game_match_id)
+                (Method::GET, format!("{}/pregame/v1/matches/{}", config.base_urls.glz, pre_game_match_id))
             },
             Endpoint::PreGameLoadouts { pre_game_match_id } => {
-                format!("{}/pregame/v1/matches/{}/loadouts", config.base_urls.glz, pre_game_match_id)
+                (Method::GET, format!("{}/pregame/v1/matches/{}/loadouts", config.base_urls.glz, pre_game_match_id))
             },
             Endpoint::SelectCharacter { pre_game_match_id, agent_id } => {
-                format!("{}/pregame/v1/matches/{}/select/{}", config.base_urls.glz, pre_game_match_id, agent_id)
+                (Method::POST, format!("{}/pregame/v1/matches/{}/select/{}", config.base_urls.glz, pre_game_match_id, agent_id))
             },
             Endpoint::LockCharacter { pre_game_match_id, agent_id } => {
-                format!("{}/pregame/v1/matches/{}/lock/{}", config.base_urls.glz, pre_game_match_id, agent_id)
+                (Method::POST, format!("{}/pregame/v1/matches/{}/lock/{}", config.base_urls.glz, pre_game_match_id, agent_id))
             },
             Endpoint::PreGameQuit { pre_game_match_id } => {
-                format!("{}/pregame/v1/matches/{}/quit", config.base_urls.glz, pre_game_match_id)
+                (Method::POST, format!("{}/pregame/v1/matches/{}/quit", config.base_urls.glz, pre_game_match_id))
             },
             Endpoint::CurrentGamePlayer { puuid } => {
-                format!("{}/core-game/v1/players/{}", config.base_urls.glz, puuid)
+                (Method::GET, format!("{}/core-game/v1/players/{}", config.base_urls.glz, puuid))
             },
             Endpoint::CurrentGameMatch { current_game_match_id } => {
-                format!("{}/core-game/v1/matches/{}", config.base_urls.glz, current_game_match_id)
+                (Method::GET, format!("{}/core-game/v1/matches/{}", config.base_urls.glz, current_game_match_id))
             },
             Endpoint::CurrentGameLoadouts { current_game_match_id } => {
-                format!("{}/core-game/v1/matches/{}/loadouts", config.base_urls.glz, current_game_match_id)
+                (Method::GET, format!("{}/core-game/v1/matches/{}/loadouts", config.base_urls.glz, current_game_match_id))
             },
             Endpoint::CurrentGameQuit { puuid, current_game_match_id } => {
-                format!("{}/core-game/v1/players/{}/disassociate/{}", config.base_urls.glz, puuid, current_game_match_id)
+                (Method::POST, format!("{}/core-game/v1/players/{}/disassociate/{}", config.base_urls.glz, puuid, current_game_match_id))
             },
             Endpoint::EntitlementsToken => {
-                format!("{}/entitlements/v1/token", config.base_urls.localhost)
+                (Method::GET, format!("{}/entitlements/v1/token", config.base_urls.localhost))
             },
         }
     }

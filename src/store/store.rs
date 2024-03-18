@@ -35,9 +35,9 @@ impl ItemType {
 impl ValorantClient {
     pub async fn get_prices(&self) -> Result<PricesResponse> {
         let endpoint = Endpoint::Prices;
-        let url = endpoint.url(&self.config);
+        let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(Method::GET, &url).await?;
+        let response = self.send_request(method, &url).await?;
         let prices_response = response.json::<PricesResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(prices_response)
@@ -45,9 +45,9 @@ impl ValorantClient {
 
     pub async fn get_storefront(&self) -> Result<StorefrontResponse> {
         let endpoint = Endpoint::Storefront { puuid: &self.config.puuid };
-        let url = endpoint.url(&self.config);
+        let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(Method::GET, &url).await?;
+        let response = self.send_request(method, &url).await?;
         let storefront_response = response.json::<StorefrontResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(storefront_response)
@@ -55,9 +55,9 @@ impl ValorantClient {
 
     pub async fn get_wallet(&self) -> Result<WalletResponse> {
         let endpoint = Endpoint::Wallet { puuid: &self.config.puuid };
-        let url = endpoint.url(&self.config);
+        let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(Method::GET, &url).await?;
+        let response = self.send_request(method, &url).await?;
         let wallet_response = response.json::<WalletResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(wallet_response)
@@ -65,9 +65,9 @@ impl ValorantClient {
 
     pub async fn get_owned_items(&self, item_type: ItemType) -> Result<OwnedItemsResponse> {
         let endpoint = Endpoint::OwnedItems { puuid: &self.config.puuid, item_type_id: item_type.item_type_id() };
-        let url = endpoint.url(&self.config);
+        let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(Method::GET, &url).await?;
+        let response = self.send_request(method, &url).await?;
         let owned_items_response = response.json::<OwnedItemsResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(owned_items_response)

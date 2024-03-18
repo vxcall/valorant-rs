@@ -4,6 +4,7 @@ mod endpoint;
 mod auth;
 pub mod client;
 pub mod current_game;
+pub mod pre_game;
 pub mod store;
 
 

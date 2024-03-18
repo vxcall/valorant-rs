@@ -64,12 +64,12 @@ STORE ENDPOINTS
 - [x] GET Owned Items
 
 PRE-GAME ENDPOINTS
-- [ ] GET Pre-Game Player
-- [ ] GET Pre-Game Match
-- [ ] GET Pre-Game Loadouts
-- [ ] POST Select Character
-- [ ] POST Lock Character
-- [ ] POST Pre-Game Quit
+- [x] GET Pre-Game Player
+- [x] GET Pre-Game Match
+- [x] GET Pre-Game Loadouts
+- [x] POST Select Character
+- [x] POST Lock Character
+- [x] POST Pre-Game Quit
 
 CURRENT GAME ENDPOINTS
 - [x] GET Current Game Player

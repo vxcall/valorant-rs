@@ -10,7 +10,19 @@ pub struct BaseUrls {
 }
 
 pub(crate) enum Endpoint<'a> {
-    ContentService,
+    FetchContent,
+    AccountXP,
+    PlayerLoadout,
+    SetPlayerLoadout,
+    PlayerMMR,
+    MatchHistory { start_index: &'a str, end_index: &'a str, queue: &'a str },
+    MatchDetails { match_id: &'a str },
+    CompetitiveUpdates { start_index: &'a str, end_index: &'a str, queue: &'a str },
+    Leaderboard { season_id: &'a str, start_index: &'a str, size: &'a str, query: &'a str },
+    Penalties,
+    Config,
+    NameService,
+
     Party { party_id: &'a str },
     PartyPlayer,
     PartyRemovePlayer,
@@ -33,6 +45,7 @@ pub(crate) enum Endpoint<'a> {
     PartyDisableCode { party_id: &'a str },
     PartyGenerateCode { party_id: &'a str },
     PartyJoinByCode { code: &'a str },
+
     Prices,
     Storefront,
     Wallet,
@@ -53,8 +66,41 @@ pub(crate) enum Endpoint<'a> {
 impl<'a> Endpoint<'a> {
     pub fn url(&self, config: &ApiConfig) -> (Method, String) {
         match self {
-            Endpoint::ContentService => {
+            Endpoint::FetchContent => {
                 (Method::GET, format!("{}/content-service/v3/content", config.base_urls.shared))
+            },
+            Endpoint::AccountXP => {
+                (Method::GET, format!("{}/account-xp/v1/players/{}", config.base_urls.pd, config.puuid))
+            },
+            Endpoint::PlayerLoadout => {
+                (Method::GET, format!("{}/personalization/v2/players/{}/playerloadout", config.base_urls.pd, config.puuid))
+            },
+            Endpoint::SetPlayerLoadout => {
+                (Method::PUT, format!("{}/personalization/v2/players/{}/playerloadout", config.base_urls.pd, config.puuid))
+            },
+            Endpoint::PlayerMMR => {
+                (Method::GET, format!("{}/mmr/v1/players/{}", config.base_urls.pd, config.puuid))
+            },
+            Endpoint::MatchHistory { start_index, end_index, queue } => {
+                (Method::GET, format!("{}/match-history/v1/history/{}?startIndex={}&endIndex={}&queue={}", config.base_urls.pd, config.puuid, start_index, end_index, queue))
+            },
+            Endpoint::MatchDetails { match_id } => {
+                (Method::GET, format!("{}/match-details/v1/matches/{}", config.base_urls.pd, match_id))
+            },
+            Endpoint::CompetitiveUpdates { start_index, end_index, queue } => {
+                (Method::GET, format!("{}/mmr/v1/players/{}/competitiveupdates?startIndex={}&endIndex={}&queue={}", config.base_urls.pd, config.puuid, start_index, end_index, queue))
+            },
+            Endpoint::Leaderboard { season_id, start_index, size, query } => {
+                (Method::GET, format!("{}/mmr/v1/leaderboards/affinity/na/queue/competitive/season/{}?startIndex={}&size={}&query={}", config.base_urls.pd, season_id, start_index, size, query))
+            },
+            Endpoint::Penalties => {
+                (Method::GET, format!("{}/restrictions/v3/penalties", config.base_urls.pd))
+            },
+            Endpoint::Config => {
+                (Method::GET, format!("{}/v1/config/{}", config.base_urls.pd, config.region))
+            },
+            Endpoint::NameService => {
+                (Method::PUT, format!("{}/name-service/v2/players", config.base_urls.pd))
             },
             Endpoint::Party { party_id } => {
                 (Method::GET, format!("{}/parties/v1/parties/{}", config.base_urls.glz, party_id))

@@ -5,8 +5,9 @@ use anyhow::Result;
 
 
 impl ValorantClient {
+    /// get_pre_game_player returns player data at agent selection phase.
     pub async fn get_pre_game_player(&self) -> Result<PreGamePlayerResponse> {
-        let endpoint = Endpoint::PreGamePlayer { puuid: &self.config.puuid };
+        let endpoint = Endpoint::PreGamePlayer;
         let (method, url) = endpoint.url(&self.config);
 
         let response = self.send_request(method, &url).await?;
@@ -15,6 +16,7 @@ impl ValorantClient {
         Ok(player_response)
     }
 
+    /// get_pre_game_match returns match data at agent selection phase.
     pub async fn get_pre_game_match(&self, match_id: &str) -> Result<PreGameMatchResponse> {
         let endpoint = Endpoint::PreGameMatch { pre_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
@@ -25,6 +27,7 @@ impl ValorantClient {
         Ok(match_response)
     }
 
+    /// get_pre_game_loadouts returns loadouts data at agent selection phase.
     pub async fn get_pre_game_loadouts(&self, match_id: &str) -> Result<PreGameLoadoutsResponse> {
         let endpoint = Endpoint::PreGameLoadouts { pre_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
@@ -35,6 +38,8 @@ impl ValorantClient {
         Ok(loadouts_response)
     }
 
+    /// select_character allows u to select a character at agent selection phase.
+    /// DON'T use this to insta-lock a character, u may get banned.
     pub async fn select_character(&self, match_id: &str, agent_id: &str) -> Result<SelectCharacterResponse> {
         let endpoint = Endpoint::SelectCharacter { pre_game_match_id: match_id, agent_id: agent_id };
         let (method, url) = endpoint.url(&self.config);
@@ -45,6 +50,8 @@ impl ValorantClient {
         Ok(loadouts_response)
     }
 
+    /// select_character allows u to lock a character at agent selection phase.
+    /// DON'T use this to insta-lock a character, u may get banned.
     pub async fn lock_character(&self, match_id: &str, agent_id: &str) -> Result<LockCharacterResponse> {
         let endpoint = Endpoint::LockCharacter { pre_game_match_id: match_id, agent_id: agent_id };
         let (method, url) = endpoint.url(&self.config);

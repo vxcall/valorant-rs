@@ -6,6 +6,7 @@ use base64;
 use crate::client::ValorantClient;
 
 impl ValorantClient {
+    /// init_tokens initializes the auth token and entitlement token.
     pub async fn init_tokens(mut self) -> Result<Self> {
         let endpoint = Endpoint::EntitlementsToken;
         let (method, url) = endpoint.url(&self.config);

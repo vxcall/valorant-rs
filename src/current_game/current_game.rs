@@ -1,13 +1,16 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
 use super::models::{CurrentGameLoadoutsResponse, CurrentGameMatchResponse, CurrentGamePlayerResponse};
-use reqwest::Method;
 use anyhow::Result;
 
 
 impl ValorantClient {
+    /// get_current_game_player returns following
+    /// - player uuid
+    /// - match id
+    /// - version
     pub async fn get_current_game_player(&self) -> Result<CurrentGamePlayerResponse> {
-        let endpoint = Endpoint::CurrentGamePlayer { puuid: &self.config.puuid };
+        let endpoint = Endpoint::CurrentGamePlayer;
         let (method, url) = endpoint.url(&self.config);
 
         let response = self.send_request(method, &url).await?;
@@ -16,6 +19,7 @@ impl ValorantClient {
         Ok(player_response)
     }
 
+    /// get_current_game_match returns match state, map id, players info participating in the match and many more stuff.
      pub async fn get_current_game_match(&self, match_id: &str) -> Result<CurrentGameMatchResponse> {
         let endpoint = Endpoint::CurrentGameMatch { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
@@ -26,6 +30,7 @@ impl ValorantClient {
         Ok(match_response)
     }
 
+    /// get_current_game_loadouts returns many things including agent info,skins, sprays and many more about participating players.
      pub async fn get_current_game_loadouts(&self, match_id: &str) -> Result<CurrentGameLoadoutsResponse> {
         let endpoint = Endpoint::CurrentGameLoadouts { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
@@ -36,9 +41,9 @@ impl ValorantClient {
         Ok(loadouts_response)
     }
 
-    // haven't tested yet
+    /// quit_current_match allows u to quit the current match.
     pub async fn quit_current_match(&self, match_id: &str) -> Result<()> {
-        let endpoint = Endpoint::CurrentGameQuit { puuid: &self.config.puuid, current_game_match_id: match_id };
+        let endpoint = Endpoint::CurrentGameQuit { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
 
         self.send_request(method, &url).await?;

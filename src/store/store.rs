@@ -1,7 +1,6 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
 use super::models::{ PricesResponse, StorefrontResponse, WalletResponse, OwnedItemsResponse };
-use reqwest::Method;
 use anyhow::Result;
 
 #[derive(Debug, Clone, Copy)]
@@ -33,6 +32,7 @@ impl ItemType {
 
 
 impl ValorantClient {
+    /// get_prices returns prices of all items in the game.
     pub async fn get_prices(&self) -> Result<PricesResponse> {
         let endpoint = Endpoint::Prices;
         let (method, url) = endpoint.url(&self.config);
@@ -43,8 +43,9 @@ impl ValorantClient {
         Ok(prices_response)
     }
 
+    /// get_storefront returns all items available in the store.
     pub async fn get_storefront(&self) -> Result<StorefrontResponse> {
-        let endpoint = Endpoint::Storefront { puuid: &self.config.puuid };
+        let endpoint = Endpoint::Storefront;
         let (method, url) = endpoint.url(&self.config);
 
         let response = self.send_request(method, &url).await?;
@@ -53,8 +54,9 @@ impl ValorantClient {
         Ok(storefront_response)
     }
 
+    /// get_wallet returns wallet info of the player like Redianite Points, Kingdom Credits, and Valorant Points.
     pub async fn get_wallet(&self) -> Result<WalletResponse> {
-        let endpoint = Endpoint::Wallet { puuid: &self.config.puuid };
+        let endpoint = Endpoint::Wallet;
         let (method, url) = endpoint.url(&self.config);
 
         let response = self.send_request(method, &url).await?;
@@ -63,8 +65,9 @@ impl ValorantClient {
         Ok(wallet_response)
     }
 
+    /// get_owned_items returns all items owned by the player.
     pub async fn get_owned_items(&self, item_type: ItemType) -> Result<OwnedItemsResponse> {
-        let endpoint = Endpoint::OwnedItems { puuid: &self.config.puuid, item_type_id: item_type.item_type_id() };
+        let endpoint = Endpoint::OwnedItems { item_type_id: item_type.item_type_id() };
         let (method, url) = endpoint.url(&self.config);
 
         let response = self.send_request(method, &url).await?;

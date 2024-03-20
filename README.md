@@ -4,17 +4,13 @@ A crate which offers unofficial valorant api client written in Rust.
 use this when, for instance, u want to crate a valorant discord bot in Rust.
 
 ## am i getting banned?
-the original api's document mentions that:
+You most likely not. I've been using these endpoints too while developing but never experienced a ban, so most likely you are safe as long as you dont spam it or abuse it.
 
-> These endpoints are not officially supported. However, as long as you use common sense and don't do anything a Riot employee would frown at, you won't get banned.
-
-I've been using these endpoints too while developing but haven't get banned so most likely you are safe but use at your own risk.
-
-HOWEVER specifically for pre_game::SelectCharacter and pre_game::LockCharacter you may get banned by using this for instalocking agents. So u better not touch these apis even though this crate is supporting that endpoint.
+HOWEVER specifically for pre_game::select_character and pre_game::lock_character, use these APIs to instalock agents may get you banned. Riot doesnt like it, beware of it.
 
 ## endpoints coverage
 
-Don't know if i cover all those tho.
+These are just one chunk of unofficial apis, and I may haveta cover official ones as well.
 
 XMPP
 - [ ] TCP XMPP Connection

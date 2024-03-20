@@ -9,6 +9,7 @@ pub struct BaseUrls {
     pub localhost: String,
 }
 
+#[allow(dead_code)]
 pub(crate) enum Endpoint<'a> {
     FetchContent,
     AccountXP,

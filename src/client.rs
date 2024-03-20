@@ -1,7 +1,7 @@
 use anyhow::{ Result, anyhow };
 use crate::api_config::ApiConfig;
 use crate::endpoint::BaseUrls;
-use reqwest::{ Client as HttpClient, ClientBuilder, Method, RequestBuilder, Response };
+use reqwest::{ Client as HttpClient, ClientBuilder, Method, RequestBuilder };
 use std::path::PathBuf;
 use dirs;
 use std::fs;

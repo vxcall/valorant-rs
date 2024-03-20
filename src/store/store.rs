@@ -1,7 +1,11 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use super::models::{ PricesResponse, StorefrontResponse, WalletResponse, OwnedItemsResponse };
 use anyhow::Result;
+
+use super::owned_items::OwnedItemsResponse;
+use super::prices::PricesResponse;
+use super::storefront::StorefrontResponse;
+use super::wallet::WalletResponse;
 
 #[derive(Debug, Clone, Copy)]
 pub enum ItemType {

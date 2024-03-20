@@ -1,7 +1,10 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use super::models::{CurrentGameLoadoutsResponse, CurrentGameMatchResponse, CurrentGamePlayerResponse};
 use anyhow::Result;
+
+use super::current_game_loadouts::CurrentGameLoadoutsResponse;
+use super::current_game_match::CurrentGameMatchResponse;
+use super::current_game_player::CurrentGamePlayerResponse;
 
 
 impl ValorantClient {

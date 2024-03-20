@@ -1,6 +1,10 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use super::{models::{ PreGameLoadoutsResponse, PreGameMatchResponse, PreGamePlayerResponse }, LockCharacterResponse, SelectCharacterResponse};
+use super::lock_character::LockCharacterResponse;
+use super::models::pre_game_player::PreGamePlayerResponse;
+use super::pre_game_loadouts::PreGameLoadoutsResponse;
+use super::pre_game_match::PreGameMatchResponse;
+use super::select_character::SelectCharacterResponse;
 use anyhow::Result;
 
 

@@ -4,7 +4,8 @@ use base64::{ engine::general_purpose::STANDARD, Engine };
 use base64;
 use crate::client::ValorantClient;
 
-use super::{EntitlementsTokenResponse, SessionsResponse};
+use super::entitlements_token::EntitlementsTokenResponse;
+use super::sessions::SessionsResponse;
 
 impl ValorantClient {
     /// init_tokens initializes the auth token and entitlement token.

@@ -1,10 +1,19 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use super::models::FetchContentResponse;
-use super::{AccountXPResponse, CompetitiveUpdatesResponse, ConfigResponse, LeaderboardResponse, MatchDetailsResponse, MatchHistoryResponse, PenaltiesResponse, PlayerLoadoutResponse, PlayerMMRResponse};
-use anyhow::{anyhow, Result};
+use anyhow::{Result};
 use base64::{ engine::general_purpose::STANDARD, Engine };
 use base64;
+
+use super::account_xp::AccountXPResponse;
+use super::competitive_updates::CompetitiveUpdatesResponse;
+use super::config::ConfigResponse;
+use super::fetch_content::FetchContentResponse;
+use super::leaderboard::LeaderboardResponse;
+use super::match_details::MatchDetailsResponse;
+use super::match_history::MatchHistoryResponse;
+use super::penalties::PenaltiesResponse;
+use super::player_loadout::PlayerLoadoutResponse;
+use super::player_mmr::PlayerMMRResponse;
 
 
 impl ValorantClient {

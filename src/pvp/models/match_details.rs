@@ -108,9 +108,9 @@ pub struct RoundDamage {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "PascalCase")]
 pub struct XPModification {
-    pub value: i32,
+    pub value: f32,
     #[serde(rename = "ID")]
     pub id: String,
 }
@@ -118,8 +118,8 @@ pub struct XPModification {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BehaviorFactors {
-    pub afk_rounds: i32,
-    pub collisions: Option<i32>,
+    pub afk_rounds: f64,
+    pub collisions: Option<f64>,
     pub comms_rating_recovery: i32,
     pub damage_participation_outgoing: i32,
     pub friendly_fire_incoming: Option<i32>,

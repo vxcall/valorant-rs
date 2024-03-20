@@ -58,5 +58,6 @@ pub struct LatestCompetitiveUpdate {
     pub ranked_rating_earned: i32,
     pub ranked_rating_performance_bonus: i32,
     pub competitive_movement: String,
+    #[serde(rename = "AFKPenalty")]
     pub afk_penalty: i32,
 }

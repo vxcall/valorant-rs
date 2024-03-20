@@ -16,10 +16,10 @@ pub(crate) enum Endpoint<'a> {
     PlayerLoadout,
     SetPlayerLoadout,
     PlayerMMR,
-    MatchHistory { start_index: &'a str, end_index: &'a str, queue: &'a str },
+    MatchHistory { start_index: Option<&'a str>, end_index: Option<&'a str>, queue: Option<&'a str> },
     MatchDetails { match_id: &'a str },
-    CompetitiveUpdates { start_index: &'a str, end_index: &'a str, queue: &'a str },
-    Leaderboard { season_id: &'a str, start_index: &'a str, size: &'a str, query: &'a str },
+    CompetitiveUpdates { start_index: Option<&'a str>, end_index: Option<&'a str>, queue: Option<&'a str> },
+    Leaderboard { season_id: &'a str, start_index: &'a str, size: &'a str, query: Option<&'a str> },
     Penalties,
     Config,
     NameService,
@@ -91,16 +91,23 @@ impl<'a> Endpoint<'a> {
                 (Method::GET, format!("{}/mmr/v1/players/{}", config.base_urls.pd, config.puuid))
             },
             Endpoint::MatchHistory { start_index, end_index, queue } => {
-                (Method::GET, format!("{}/match-history/v1/history/{}?startIndex={}&endIndex={}&queue={}", config.base_urls.pd, config.puuid, start_index, end_index, queue))
+                let start_index_query = start_index.map_or(String::new(), |start| format!("&startIndex={}", start));
+                let end_index_query = end_index.map_or(String::new(), |end| format!("&endIndex={}", end));
+                let queue_query = queue.map_or(String::new(), |q| format!("&queue={}", q));
+                (Method::GET, format!("{}/match-history/v1/history/{}?{}{}{}", config.base_urls.pd, config.puuid, start_index_query, end_index_query, queue_query))
             },
             Endpoint::MatchDetails { match_id } => {
                 (Method::GET, format!("{}/match-details/v1/matches/{}", config.base_urls.pd, match_id))
             },
             Endpoint::CompetitiveUpdates { start_index, end_index, queue } => {
-                (Method::GET, format!("{}/mmr/v1/players/{}/competitiveupdates?startIndex={}&endIndex={}&queue={}", config.base_urls.pd, config.puuid, start_index, end_index, queue))
+                let start_index_query = start_index.map_or(String::new(), |start| format!("&startIndex={}", start));
+                let end_index_query = end_index.map_or(String::new(), |end| format!("&endIndex={}", end));
+                let queue_query = queue.map_or(String::new(), |q| format!("&queue={}", q));
+                (Method::GET, format!("{}/mmr/v1/players/{}/competitiveupdates?{}{}{}", config.base_urls.pd, config.puuid, start_index_query, end_index_query, queue_query))
             },
             Endpoint::Leaderboard { season_id, start_index, size, query } => {
-                (Method::GET, format!("{}/mmr/v1/leaderboards/affinity/na/queue/competitive/season/{}?startIndex={}&size={}&query={}", config.base_urls.pd, season_id, start_index, size, query))
+                let query_q = query.map_or(String::new(), |q| format!("&queue={}", q));
+                (Method::GET, format!("{}/mmr/v1/leaderboards/affinity/na/queue/competitive/season/{}?startIndex={}&size={}{}", config.base_urls.pd, season_id, start_index, size, query_q))
             },
             Endpoint::Penalties => {
                 (Method::GET, format!("{}/restrictions/v3/penalties", config.base_urls.pd))
@@ -237,3 +244,4 @@ impl<'a> Endpoint<'a> {
         }
     }
 }
+

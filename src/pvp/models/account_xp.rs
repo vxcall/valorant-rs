@@ -28,9 +28,12 @@ pub struct HistoryEntry {
     pub match_start: String,
     pub start_progress: Progress,
     pub end_progress: Progress,
+    #[serde(rename = "XPDelta")]
     pub xp_delta: i32,
+    #[serde(rename = "XPSources")]
     pub xp_sources: Vec<XpSource>,
-    pub xp_multipliers: Vec<Value>, // Using `Value` to represent `unknown` type from TypeScript
+    #[serde(rename = "XPMultipliers")]
+    pub xp_multipliers: Vec<Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -44,7 +47,10 @@ pub struct XpSource {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "lowercase")]
 pub enum XpSourceId {
+    #[serde(rename = "time-played")]
     TimePlayed,
+    #[serde(rename = "match-win")]
     MatchWin,
+    #[serde(rename = "first-win-of-the-day")]
     FirstWinOfTheDay,
 }

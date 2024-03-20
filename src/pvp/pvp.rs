@@ -17,21 +17,30 @@ use super::player_mmr::PlayerMMRResponse;
 
 
 impl ValorantClient {
-    pub async fn fetch_content(&self) -> Result<FetchContentResponse> {
+
+    pub(crate) fn client_version() -> String {
+        "release-08.04-shipping-4-2324912".to_owned()
+    }
+
+    pub(crate) fn client_platform() -> String {
         let client_platform = r#"{
     "platformType": "PC",
     "platformOS": "Windows",
     "platformOSVersion": "10.0.19042.1.256.64bit",
     "platformChipset": "Unknown"
 }"#;
+        STANDARD.encode(client_platform)
+    }
+
+    pub async fn fetch_content(&self) -> Result<FetchContentResponse> {
 
         let endpoint = Endpoint::FetchContent;
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientPlatform", STANDARD.encode(client_platform))
-            .header("X-Riot-ClientVersion", "release-08.04-shipping-4-2324912")
+            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .header("X-Riot-ClientVersion", Self::client_version())
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -68,13 +77,18 @@ impl ValorantClient {
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
+        let response = request
+            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .header("X-Riot-ClientVersion", Self::client_version())
+            .send()
+            .await
+            .map_err(anyhow::Error::from)?;
         let mmr_response = response.json::<>().await.map_err(anyhow::Error::from)?;
 
         Ok(mmr_response)
     }
 
-    pub async fn get_match_history(&self, start_index: &str, end_index: &str, queue: &str) -> Result<MatchHistoryResponse> {
+    pub async fn get_match_history(&self, start_index: Option<&str>, end_index: Option<&str>, queue: Option<&str>) -> Result<MatchHistoryResponse> {
         let endpoint = Endpoint::MatchHistory { start_index, end_index, queue };
         let (method, url) = endpoint.url(&self.config);
 
@@ -96,23 +110,31 @@ impl ValorantClient {
         Ok(match_details_response)
     }
 
-    pub async fn get_competitive_updates(&self, start_index: &str, end_index: &str, queue: &str) -> Result<CompetitiveUpdatesResponse> {
+    pub async fn get_competitive_updates(&self, start_index: Option<&str>, end_index: Option<&str>, queue: Option<&str>) -> Result<CompetitiveUpdatesResponse> {
         let endpoint = Endpoint::CompetitiveUpdates { start_index, end_index, queue };
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
+        let response = request
+            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .send()
+            .await
+            .map_err(anyhow::Error::from)?;
         let competitive_updates_response = response.json::<>().await.map_err(anyhow::Error::from)?;
 
         Ok(competitive_updates_response)
     }
 
-    pub async fn get_leaderboard(&self, season_id: &str, start_index: &str, size: &str, query: &str) -> Result<LeaderboardResponse> {
+    pub async fn get_leaderboard(&self, season_id: &str, start_index: &str, size: &str, query: Option<&str>) -> Result<LeaderboardResponse> {
         let endpoint = Endpoint::Leaderboard { season_id, start_index, size, query };
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
+        let response = request
+            .header("X-Riot-ClientVersion", Self::client_version())
+            .send()
+            .await
+            .map_err(anyhow::Error::from)?;
         let leaderboard_response = response.json::<>().await.map_err(anyhow::Error::from)?;
 
         Ok(leaderboard_response)
@@ -123,10 +145,14 @@ impl ValorantClient {
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
-        let leaderboard_response = response.json::<>().await.map_err(anyhow::Error::from)?;
+        let response = request
+            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .send()
+            .await
+            .map_err(anyhow::Error::from)?;
+        let penalty_response = response.json::<>().await.map_err(anyhow::Error::from)?;
 
-        Ok(leaderboard_response)
+        Ok(penalty_response)
     }
 
     pub async fn get_config(&self) -> Result<ConfigResponse> {
@@ -135,8 +161,8 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request.send().await.map_err(anyhow::Error::from)?;
-        let leaderboard_response = response.json::<>().await.map_err(anyhow::Error::from)?;
+        let config_response = response.json::<>().await.map_err(anyhow::Error::from)?;
 
-        Ok(leaderboard_response)
+        Ok(config_response)
     }
 }

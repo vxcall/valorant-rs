@@ -1,6 +1,6 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use anyhow::{Result};
+use anyhow::Result;
 use base64::{ engine::general_purpose::STANDARD, Engine };
 use base64;
 

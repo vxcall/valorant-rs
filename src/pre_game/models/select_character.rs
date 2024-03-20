@@ -39,7 +39,8 @@ pub struct SelectCharacterResponse {
     pub phase_time_remaining_ns: i64,
     #[serde(rename = "StepTimeNS")]
     pub step_time_remaining_ns: i64,
-    pub alt_modes_flag_ADA: bool,
+    #[serde(rename = "altModesFlagADA")]
+    pub alt_modes_flag_ada: bool,
     pub tournament_metadata: Option<serde_json::Value>,
     pub roster_metadata: Option<serde_json::Value>,
 }

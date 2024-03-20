@@ -53,7 +53,7 @@ impl ValorantClient {
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
+        request.send().await.map_err(anyhow::Error::from)?;
 
         Ok(())
     }

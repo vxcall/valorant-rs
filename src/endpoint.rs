@@ -50,17 +50,25 @@ pub(crate) enum Endpoint<'a> {
     Storefront,
     Wallet,
     OwnedItems { item_type_id: &'a str },
+
     PreGamePlayer,
     PreGameMatch { pre_game_match_id: &'a str },
     PreGameLoadouts { pre_game_match_id: &'a str },
     SelectCharacter { pre_game_match_id: &'a str, agent_id: &'a str },
     LockCharacter { pre_game_match_id: &'a str, agent_id: &'a str },
     PreGameQuit { pre_game_match_id: &'a str },
+
     CurrentGamePlayer,
     CurrentGameMatch { current_game_match_id: &'a str },
     CurrentGameLoadouts { current_game_match_id: &'a str },
     CurrentGameQuit { current_game_match_id: &'a str },
+
+    ItemUpgrades,
+    Contracts,
+    ActiveContract { contract_id: &'a str },
+
     EntitlementsToken,
+    Sessions,
 }
 
 impl<'a> Endpoint<'a> {
@@ -210,8 +218,20 @@ impl<'a> Endpoint<'a> {
             Endpoint::CurrentGameQuit { current_game_match_id } => {
                 (Method::POST, format!("{}/core-game/v1/players/{}/disassociate/{}", config.base_urls.glz, config.puuid, current_game_match_id))
             },
+            Endpoint::ItemUpgrades => {
+                (Method::GET, format!("{}/contract-definitions/v3/item-upgrades", config.base_urls.pd))
+            },
+            Endpoint::Contracts => {
+                (Method::GET, format!("{}/contracts/v1/contracts/{}", config.base_urls.pd, config.puuid))
+            },
+            Endpoint::ActiveContract { contract_id } => {
+                (Method::POST, format!("{}/contracts/v1/contracts/{}/special/{}", config.base_urls.pd, config.puuid, contract_id))
+            },
             Endpoint::EntitlementsToken => {
                 (Method::GET, format!("{}/entitlements/v1/token", config.base_urls.localhost))
+            },
+            Endpoint::Sessions => {
+                (Method::GET, format!("{}/product-session/v1/external-sessions", config.base_urls.localhost))
             },
         }
     }

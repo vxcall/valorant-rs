@@ -1,67 +1,66 @@
 use serde::{ Deserialize, Serialize };
-use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct SelectCharacterResponse {
     #[serde(rename = "ID")]
-    id: String,
-    version: i64,
-    teams: Vec<Team>,
-    ally_team: Option<Team>,
-    enemy_team: Option<Team>,
-    observer_subjects: Vec<serde_json::Value>, // unknown types as flexible JSON
-    match_coaches: Vec<serde_json::Value>, // unknown types as flexible JSON
-    enemy_team_size: i32,
-    enemy_team_lock_count: i32,
-    pregame_state: PregameState,
-    last_updated: String,
+    pub id: String,
+    pub version: i64,
+    pub teams: Vec<Team>,
+    pub ally_team: Option<Team>,
+    pub enemy_team: Option<Team>,
+    pub observer_subjects: Vec<serde_json::Value>, // unknown types as flexible JSON
+    pub match_coaches: Vec<serde_json::Value>, // unknown types as flexible JSON
+    pub enemy_team_size: i32,
+    pub enemy_team_lock_count: i32,
+    pub pregame_state: PregameState,
+    pub last_updated: String,
     #[serde(rename = "MapID")]
-    map_id: String,
-    map_select_pool: Vec<serde_json::Value>,
+    pub map_id: String,
+    pub map_select_pool: Vec<serde_json::Value>,
     #[serde(rename = "BannedMapIds")]
-    banned_map_ids: Vec<serde_json::Value>,
-    casted_votes: Option<Vec<serde_json::Value>>,
-    map_select_steps: Vec<serde_json::Value>,
-    map_select_step: i32,
-    team1: TeamColor,
+    pub banned_map_ids: Vec<serde_json::Value>,
+    pub casted_votes: Option<Vec<serde_json::Value>>,
+    pub map_select_steps: Vec<serde_json::Value>,
+    pub map_select_step: i32,
+    pub team1: TeamColor,
     #[serde(rename = "GamePodID")]
-    game_pod_id: String,
-    mode: String,
+    pub game_pod_id: String,
+    pub mode: String,
     #[serde(rename = "VoiceSessionID")]
-    voice_session_id: String,
-    muc_name: String,
-    team_match_token: String,
+    pub voice_session_id: String,
+    pub muc_name: String,
+    pub team_match_token: String,
     #[serde(rename = "QueueID")]
-    queue_id: Option<String>,
-    provisioning_flow_id: ProvisioningFlowID,
-    is_ranked: bool,
+    pub queue_id: Option<String>,
+    pub provisioning_flow_id: ProvisioningFlowID,
+    pub is_ranked: bool,
     #[serde(rename = "PhaseTimeRemainingNS")]
-    phase_time_remaining_ns: i64,
+    pub phase_time_remaining_ns: i64,
     #[serde(rename = "StepTimeNS")]
-    step_time_remaining_ns: i64,
-    alt_modes_flag_ADA: bool,
-    tournament_metadata: Option<serde_json::Value>,
-    roster_metadata: Option<serde_json::Value>,
+    pub step_time_remaining_ns: i64,
+    pub alt_modes_flag_ADA: bool,
+    pub tournament_metadata: Option<serde_json::Value>,
+    pub roster_metadata: Option<serde_json::Value>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-enum ProvisioningFlowID {
+pub enum ProvisioningFlowID {
     Matchmaking,
     CustomGame,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-enum TeamColor {
+pub enum TeamColor {
     Blue,
     Red,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-enum CharacterSelectionState {
+pub enum CharacterSelectionState {
     Selected,
     Locked,
     #[serde(rename = "")]
@@ -70,57 +69,55 @@ enum CharacterSelectionState {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-enum PregameState {
+pub enum PregameState {
     CharacterSelectActive,
     Provisioned,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct Player {
-    #[serde(rename = "SubjectID")]
-    subject_id: String,
+pub struct Player {
+    pub subject: String,
     #[serde(rename = "CharacterID")]
-    character_id: String,
-    character_selection_state: CharacterSelectionState,
-    pregame_player_state: String,
-    competitive_tier: i32,
-    player_identity: PlayerIdentity,
-    seasonal_badge_info: SeasonalBadgeInfo,
-    is_captain: bool,
+    pub character_id: String,
+    pub character_selection_state: CharacterSelectionState,
+    pub pregame_player_state: String,
+    pub competitive_tier: i32,
+    pub player_identity: PlayerIdentity,
+    pub seasonal_badge_info: SeasonalBadgeInfo,
+    pub is_captain: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct PlayerIdentity {
-    #[serde(rename = "SubjectID")]
-    subject_id: String,
+pub struct PlayerIdentity {
+    pub subject: String,
     #[serde(rename = "PlayerCardID")]
-    player_card_id: String,
+    pub player_card_id: String,
     #[serde(rename = "PlayerTitleID")]
-    player_title_id: String,
-    account_level: i32,
+    pub player_title_id: String,
+    pub account_level: i32,
     #[serde(rename = "PreferredLevelBorderID")]
-    preferred_level_border_id: Option<String>,
-    incognito: bool,
-    hide_account_level: bool,
+    pub preferred_level_border_id: Option<String>,
+    pub incognito: bool,
+    pub hide_account_level: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct SeasonalBadgeInfo {
+pub struct SeasonalBadgeInfo {
     #[serde(rename = "SeasonID")]
-    season_id: Option<String>,
-    number_of_wins: i32,
-    wins_by_tier: Option<serde_json::Value>,
-    rank: i32,
-    leaderboard_rank: i32,
+    pub season_id: Option<String>,
+    pub number_of_wins: i32,
+    pub wins_by_tier: Option<serde_json::Value>,
+    pub rank: i32,
+    pub leaderboard_rank: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct Team {
+pub struct Team {
     #[serde(rename = "TeamID")]
-    team_id: TeamColor,
-    players: Vec<Player>,
+    pub team_id: TeamColor,
+    pub players: Vec<Player>,
 }

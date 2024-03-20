@@ -1,4 +1,4 @@
-mod party;
+mod pvp;
 mod models;
 
 pub use models::*;

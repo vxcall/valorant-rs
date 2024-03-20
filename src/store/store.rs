@@ -37,7 +37,8 @@ impl ValorantClient {
         let endpoint = Endpoint::Prices;
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let prices_response = response.json::<PricesResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(prices_response)
@@ -48,7 +49,8 @@ impl ValorantClient {
         let endpoint = Endpoint::Storefront;
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let storefront_response = response.json::<StorefrontResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(storefront_response)
@@ -59,7 +61,8 @@ impl ValorantClient {
         let endpoint = Endpoint::Wallet;
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let wallet_response = response.json::<WalletResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(wallet_response)
@@ -70,7 +73,8 @@ impl ValorantClient {
         let endpoint = Endpoint::OwnedItems { item_type_id: item_type.item_type_id() };
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let owned_items_response = response.json::<OwnedItemsResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(owned_items_response)

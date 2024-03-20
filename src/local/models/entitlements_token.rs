@@ -1,6 +1,7 @@
 use serde::{ Deserialize, Serialize };
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct EntitlementsTokenResponse {
     #[serde(rename = "accessToken")]
     pub auth_token: String,                 //auth token

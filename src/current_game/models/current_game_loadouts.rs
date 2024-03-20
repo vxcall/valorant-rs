@@ -11,79 +11,77 @@ pub struct CurrentGameLoadoutsResponse {
 #[serde(rename_all = "PascalCase")]
 pub struct LoadoutEntry {
     #[serde(rename = "CharacterID")]
-    character_id: String,
-    loadout: Loadout,
+    pub character_id: String,
+    pub loadout: Loadout,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Loadout {
-    subject: String,
-    sprays: SprayContainer,
-    expressions: ExpressionContainer,
-    items: HashMap<String, Item>,
+    pub subject: String,
+    pub sprays: SprayContainer,
+    pub expressions: ExpressionContainer,
+    pub items: HashMap<String, Item>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct SprayContainer {
-    spray_selections: Vec<SpraySelection>,
+    pub spray_selections: Vec<SpraySelection>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct SpraySelection {
     #[serde(rename = "SocketID")]
-    socket_id: String,
+    pub socket_id: String,
     #[serde(rename = "SprayID")]
-    spray_id: String,
+    pub spray_id: String,
     #[serde(rename = "LevelID")]
-    level_id: String,
+    pub level_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ExpressionContainer {
     #[serde(rename = "AESSelections")]
-    aes_selections: Vec<AESSelection>,
+    pub aes_selections: Vec<AESSelection>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct AESSelection {
     #[serde(rename = "SocketID")]
-    socket_id: String,
+    pub socket_id: String,
     #[serde(rename = "AssetID")]
-    asset_id: String,
+    pub asset_id: String,
     #[serde(rename = "TypeID")]
-    type_id: String,
+    pub type_id: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Item {
     #[serde(rename = "ID")]
-    id: String,
+    pub id: String,
     #[serde(rename = "TypeID")]
-    type_id: String,
-    sockets: HashMap<String, SocketEntry>,
+    pub type_id: String,
+    pub sockets: HashMap<String, SocketEntry>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct SocketEntry {
     #[serde(rename = "ID")]
-    id: String,
-    item: NestedItem,
+    pub id: String,
+    pub item: NestedItem,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct NestedItem {
     #[serde(rename = "ID")]
-    id: String,
+    pub id: String,
     #[serde(rename = "TypeID")]
-    type_id: String,
+    pub type_id: String,
 }
-
-//-------------------------------------------------------------

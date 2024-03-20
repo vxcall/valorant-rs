@@ -13,7 +13,8 @@ impl ValorantClient {
         let endpoint = Endpoint::CurrentGamePlayer;
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let player_response = response.json::<CurrentGamePlayerResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(player_response)
@@ -24,7 +25,8 @@ impl ValorantClient {
         let endpoint = Endpoint::CurrentGameMatch { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let match_response = response.json::<CurrentGameMatchResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(match_response)
@@ -35,7 +37,8 @@ impl ValorantClient {
         let endpoint = Endpoint::CurrentGameLoadouts { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
 
-        let response = self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
         let loadouts_response = response.json::<CurrentGameLoadoutsResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(loadouts_response)
@@ -46,7 +49,8 @@ impl ValorantClient {
         let endpoint = Endpoint::CurrentGameQuit { current_game_match_id: match_id };
         let (method, url) = endpoint.url(&self.config);
 
-        self.send_request(method, &url).await?;
+        let request = self.create_base_request(method, url);
+        let response = request.send().await.map_err(anyhow::Error::from)?;
 
         Ok(())
     }

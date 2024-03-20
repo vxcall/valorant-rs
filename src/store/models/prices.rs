@@ -4,26 +4,26 @@ use std::collections::HashMap;
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct PricesResponse {
-    offers: Vec<Offer>,
+    pub offers: Vec<Offer>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct Offer {
+pub struct Offer {
     #[serde(rename = "OfferID")]
-    offer_id: String,
-    is_direct_purchase: bool,
-    start_date: String,
-    cost: HashMap<String, f64>,
-    rewards: Vec<Reward>,
+    pub offer_id: String,
+    pub is_direct_purchase: bool,
+    pub start_date: String,
+    pub cost: HashMap<String, f64>,
+    pub rewards: Vec<Reward>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
-struct Reward {
+pub struct Reward {
     #[serde(rename = "ItemTypeID")]
-    item_type_id: String,
+    pub item_type_id: String,
     #[serde(rename = "ItemID")]
-    item_id: String,
-    quantity: u32,
+    pub item_id: String,
+    pub quantity: u32,
 }

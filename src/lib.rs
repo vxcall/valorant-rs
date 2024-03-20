@@ -1,11 +1,11 @@
-mod models;
 mod api_config;
 mod endpoint;
-mod auth;
 pub mod client;
-pub mod current_game;
-pub mod pre_game;
+pub mod pvp;
+pub mod party;
 pub mod store;
-
+pub mod pre_game;
+pub mod current_game;
+pub mod local;
 
 pub use client::ValorantClient;

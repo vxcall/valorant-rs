@@ -1,10 +1,10 @@
 use serde::{ Deserialize, Serialize };
-use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
 pub struct PreGamePlayerResponse {
-    subject: String,
+    pub subject: String,
     #[serde(rename = "MatchID")]
-    match_id: String,
-    version: i64,
+    pub match_id: String,
+    pub version: i64,
 }

@@ -1,7 +1,7 @@
 use anyhow::{ Result, anyhow };
 use crate::api_config::ApiConfig;
 use crate::endpoint::BaseUrls;
-use reqwest::{ Client as HttpClient, ClientBuilder, Method, Response };
+use reqwest::{ Client as HttpClient, ClientBuilder, Method, RequestBuilder, Response };
 use std::path::PathBuf;
 use dirs;
 use std::fs;
@@ -36,14 +36,10 @@ impl ValorantClient {
         })
     }
 
-    pub(crate) async fn send_request(&self, method: Method, url: &str) -> Result<Response> {
-        let client = &self.client;
-        let request = client.request(method, url)
+    pub(crate) fn create_base_request<T>(&self, method: Method, url: T) -> RequestBuilder where T: Into<String> {
+        self.client.request(method, url.into())
             .header("Authorization", format!("Bearer {}", self.config.auth_token))
-            .header("X-Riot-Entitlements-JWT", &self.config.entitlement_token);
-
-        let response = request.send().await.map_err(anyhow::Error::from)?;
-        Ok(response)
+            .header("X-Riot-Entitlements-JWT", &self.config.entitlement_token)
     }
 
     fn create_appdata_local_path<T>(path: T) -> Option<PathBuf> where T: Into<String> {

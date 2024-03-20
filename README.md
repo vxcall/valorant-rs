@@ -20,16 +20,16 @@ XMPP
 - [ ] TCP XMPP Connection
 
 PVP ENDPOINTS
-- [ ] GET Fetch Content
-- [ ] GET Account XP
-- [ ] GET Player Loadout
+- [x] GET Fetch Content
+- [x] GET Account XP
+- [x] GET Player Loadout
 - [ ] PUT Set Player Loadout
-- [ ] GET Player MMR
-- [ ] GET Match History
-- [ ] GET Match Details
-- [ ] GET Competitive Updates
+- [x] GET Player MMR
+- [x] GET Match History
+- [x] GET Match Details
+- [x] GET Competitive Updates
 - [ ] GET Leaderboard
-- [ ] GET Penalties
+- [x] GET Penalties
 - [ ] GET Config
 - [ ] PUT Name Service
 
@@ -84,7 +84,7 @@ CONTRACT ENDPOINTS
 
 LOCAL ENDPOINTS
 - [ ] GET Local Help
-- [ ] GET Sessions
+- [x] GET Sessions
 - [ ] GET RSO User Info
 - [ ] GET Client Region
 - [ ] GET Account Alias

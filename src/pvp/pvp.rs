@@ -128,6 +128,7 @@ impl ValorantClient {
 
     /// returns leaderboard.
     /// season_id: u can get this with get_competitive_updates
+    #[allow(dead_code)]
     async fn get_leaderboard(&self, season_id: &str, start_index: &str, size: &str, query: Option<&str>) -> Result<LeaderboardResponse> {
         let endpoint = Endpoint::Leaderboard { season_id, start_index, size, query };
         let (method, url) = endpoint.url(&self.config);

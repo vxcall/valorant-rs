@@ -24,6 +24,7 @@ impl ValorantClient {
             pd: format!("https://pd.{}.a.pvp.net", shard),
             glz: format!("https://glz-{}-1.{}.a.pvp.net", region, shard),
             localhost: format!("https://127.0.0.1:{}", port),
+            valorant_api: String::from("https://valorant-api.com"),
         };
 
         let client = ClientBuilder::new()

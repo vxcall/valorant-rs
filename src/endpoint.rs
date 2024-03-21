@@ -7,6 +7,7 @@ pub struct BaseUrls {
     pub pd: String,
     pub glz: String,
     pub localhost: String,
+    pub valorant_api: String,
 }
 
 #[allow(dead_code)]
@@ -245,10 +246,10 @@ impl<'a> Endpoint<'a> {
                 (Method::GET, format!("{}/product-session/v1/external-sessions", config.base_urls.localhost))
             },
             Endpoint::Agents => {
-                (Method::GET, String::from("https://valorant-api.com/v1/agents?isPlayableCharacter=true"))
+                (Method::GET, format!("{}/v1/agents?isPlayableCharacter=true", config.base_urls.valorant_api))
             },
             Endpoint::Version => {
-                (Method::GET, String::from("https://valorant-api.com/v1/version"))
+                (Method::GET, format!("{}/v1/version", config.base_urls.valorant_api))
             },
         }
     }

@@ -1,10 +1,8 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
-use super::lock_character::LockCharacterResponse;
 use super::models::pre_game_player::PreGamePlayerResponse;
 use super::pre_game_loadouts::PreGameLoadoutsResponse;
 use super::pre_game_match::PreGameMatchResponse;
-use super::select_character::SelectCharacterResponse;
 use anyhow::Result;
 
 
@@ -47,28 +45,26 @@ impl ValorantClient {
 
     /// select_character allows u to select a character at agent selection phase.
     /// DON'T use this to insta-lock a character, u may get banned.
-    pub async fn select_character(&self, pre_game_match_id: &str, agent_id: &str) -> Result<SelectCharacterResponse> {
+    pub async fn select_character(&self, pre_game_match_id: &str, agent_id: &str) -> Result<()> {
         let endpoint = Endpoint::SelectCharacter { pre_game_match_id: pre_game_match_id, agent_id: agent_id };
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
-        let select_character_response = response.json::<SelectCharacterResponse>().await.map_err(anyhow::Error::from)?;
+        request.send().await.map_err(anyhow::Error::from)?;
 
-        Ok(select_character_response)
+        Ok(())
     }
 
     /// select_character allows u to lock a character at agent selection phase.
     /// DON'T use this to insta-lock a character, u may get banned.
-    pub async fn lock_character(&self, pre_game_match_id: &str, agent_id: &str) -> Result<LockCharacterResponse> {
+    pub async fn lock_character(&self, pre_game_match_id: &str, agent_id: &str) -> Result<()> {
         let endpoint = Endpoint::LockCharacter { pre_game_match_id: pre_game_match_id, agent_id: agent_id };
         let (method, url) = endpoint.url(&self.config);
 
         let request = self.create_base_request(method, url);
-        let response = request.send().await.map_err(anyhow::Error::from)?;
-        let lock_character_response = response.json::<LockCharacterResponse>().await.map_err(anyhow::Error::from)?;
+        request.send().await.map_err(anyhow::Error::from)?;
 
-        Ok(lock_character_response)
+        Ok(())
     }
 
     pub async fn pre_game_quit(&self, pre_game_match_id: &str) -> Result<()> {

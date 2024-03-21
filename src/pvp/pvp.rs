@@ -18,8 +18,9 @@ use super::player_mmr::PlayerMMRResponse;
 
 impl ValorantClient {
 
-    pub(crate) fn client_version() -> String {
-        "release-08.04-shipping-4-2324912".to_owned()
+    pub(crate) async fn client_version(&self) -> Result<String> {
+        let res = self.get_version().await?;
+        Ok(res.data.riot_client_version)
     }
 
     pub(crate) fn client_platform() -> String {
@@ -40,7 +41,7 @@ impl ValorantClient {
         let request = self.create_base_request(method, url);
         let response = request
             .header("X-Riot-ClientPlatform", Self::client_platform())
-            .header("X-Riot-ClientVersion", Self::client_version())
+            .header("X-Riot-ClientVersion", self.client_version().await?)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -79,7 +80,7 @@ impl ValorantClient {
         let request = self.create_base_request(method, url);
         let response = request
             .header("X-Riot-ClientPlatform", Self::client_platform())
-            .header("X-Riot-ClientVersion", Self::client_version())
+            .header("X-Riot-ClientVersion", self.client_version().await?)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -131,7 +132,7 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientVersion", Self::client_version())
+            .header("X-Riot-ClientVersion", self.client_version().await?)
             .send()
             .await
             .map_err(anyhow::Error::from)?;

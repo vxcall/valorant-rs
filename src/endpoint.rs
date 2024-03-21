@@ -70,6 +70,9 @@ pub(crate) enum Endpoint<'a> {
 
     EntitlementsToken,
     Sessions,
+
+    Agents,
+    Version,
 }
 
 impl<'a> Endpoint<'a> {
@@ -240,6 +243,12 @@ impl<'a> Endpoint<'a> {
             },
             Endpoint::Sessions => {
                 (Method::GET, format!("{}/product-session/v1/external-sessions", config.base_urls.localhost))
+            },
+            Endpoint::Agents => {
+                (Method::GET, String::from("https://valorant-api.com/v1/agents?isPlayableCharacter=true"))
+            },
+            Endpoint::Version => {
+                (Method::GET, String::from("https://valorant-api.com/v1/version"))
             },
         }
     }

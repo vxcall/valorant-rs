@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct PartyChatTokenResponse {
-    token: String,
-    room: String,
+pub struct PartyChatTokenResponse {
+    pub token: String,
+    pub room: String,
 }

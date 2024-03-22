@@ -1,38 +1,40 @@
+use serde::{Deserialize, Serialize};
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct PartyPlayerResponse {
+pub struct PartyPlayerResponse {
     #[serde(rename = "ID")]
-    subject: String,
-    version: u32,
+    pub subject: String,
+    pub version: u32,
     #[serde(rename = "ID")]
-    current_party_id: String,
-    invites: Option<()>,
-    requests: Vec<Request>,
-    platform_info: PlatformInfo,
+    pub current_party_id: String,
+    pub invites: Option<()>,
+    pub requests: Vec<Request>,
+    pub platform_info: PlatformInfo,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct Request {
+pub struct Request {
     #[serde(rename = "ID")]
-    id: String,
+    pub id: String,
     #[serde(rename = "ID")]
-    party_id: String,
+    pub party_id: String,
     #[serde(rename = "ID")]
-    requested_by_subject: String,
-    subjects: Vec<String>,
+    pub requested_by_subject: String,
+    pub subjects: Vec<String>,
     #[serde(rename = "ID")]
-    created_at: String,
+    pub created_at: String,
     #[serde(rename = "ID")]
-    refreshed_at: String,
-    expires_in: u32,
+    pub refreshed_at: String,
+    pub expires_in: u32,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-struct PlatformInfo {
-    platform_type: String,
-    platform_os: String,
-    platform_os_version: String,
-    platform_chipset: String,
+pub struct PlatformInfo {
+    pub platform_type: String,
+    pub platform_os: String,
+    pub platform_os_version: String,
+    pub platform_chipset: String,
 }

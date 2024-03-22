@@ -7,7 +7,6 @@ pub struct BaseUrls {
     pub pd: String,
     pub glz: String,
     pub localhost: String,
-    pub valorant_api: String,
 }
 
 #[allow(dead_code)]
@@ -32,9 +31,9 @@ pub(crate) enum Endpoint<'a> {
     RefreshCompetitiveTier { party_id: &'a str },
     RefreshPlayerIdentity { party_id: &'a str },
     RefreshPings { party_id: &'a str },
-    ChangeQueue { party_id: &'a str }, 
-    StartCustomGame { party_id: &'a str }, 
-    EnterMatchmakingQueue { party_id: &'a str }, 
+    ChangeQueue { party_id: &'a str },
+    StartCustomGame { party_id: &'a str },
+    EnterMatchmakingQueue { party_id: &'a str },
     LeaveMatchmakingQueue { party_id: &'a str },
     SetPartyAccessibility { party_id: &'a str },
     SetCustomGameSettings { party_id: &'a str },
@@ -245,13 +244,19 @@ impl<'a> Endpoint<'a> {
             Endpoint::Sessions => {
                 (Method::GET, format!("{}/product-session/v1/external-sessions", config.base_urls.localhost))
             },
+            _ => (Method::GET, String::new())
+        }
+    }
+
+    pub fn url_no_config(&self) -> (Method, String) {
+        match self {
             Endpoint::Agents => {
-                (Method::GET, format!("{}/v1/agents?isPlayableCharacter=true", config.base_urls.valorant_api))
+                (Method::GET, String::from("https://valorant-api.com/v1/agents?isPlayableCharacter=true"))
             },
             Endpoint::Version => {
-                (Method::GET, format!("{}/v1/version", config.base_urls.valorant_api))
+                (Method::GET, String::from("https://valorant-api.com/v1/version"))
             },
+            _ => (Method::GET, String::new())
         }
     }
 }
-

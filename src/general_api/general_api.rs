@@ -16,11 +16,11 @@ impl ValorantClient {
         Ok(agents_response)
     }
 
-    pub async fn get_version(&self) -> Result<VersionResponse> {
+    pub async fn get_version() -> Result<VersionResponse> {
         let endpoint = Endpoint::Version;
-        let (_, url) = endpoint.url(&self.config);
+        let (_, url) = endpoint.url_no_config();
 
-        let response = self.client.get(&url).send().await.map_err(anyhow::Error::from)?;
+        let response = reqwest::get(&url).await.map_err(anyhow::Error::from)?;
         let version_response = response.json::<VersionResponse>().await.map_err(anyhow::Error::from)?;
 
         Ok(version_response)

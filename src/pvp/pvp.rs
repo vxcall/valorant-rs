@@ -1,7 +1,6 @@
 use crate::endpoint::Endpoint;
 use crate::client::ValorantClient;
 use anyhow::Result;
-use base64::{ engine::general_purpose::STANDARD, Engine };
 use base64;
 
 use super::account_xp::AccountXPResponse;
@@ -17,22 +16,6 @@ use super::player_mmr::PlayerMMRResponse;
 
 
 impl ValorantClient {
-
-    pub(crate) async fn client_version(&self) -> Result<String> {
-        let res = self.get_version().await?;
-        Ok(res.data.riot_client_version)
-    }
-
-    pub(crate) fn client_platform() -> String {
-        let client_platform = r#"{
-    "platformType": "PC",
-    "platformOS": "Windows",
-    "platformOSVersion": "10.0.19042.1.256.64bit",
-    "platformChipset": "Unknown"
-}"#;
-        STANDARD.encode(client_platform)
-    }
-
     pub async fn fetch_content(&self) -> Result<FetchContentResponse> {
 
         let endpoint = Endpoint::FetchContent;
@@ -40,8 +23,8 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientPlatform", Self::client_platform())
-            .header("X-Riot-ClientVersion", self.client_version().await?)
+            .header("X-Riot-ClientPlatform", &self.config.client_platform)
+            .header("X-Riot-ClientVersion", &self.config.client_version)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -79,8 +62,8 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientPlatform", Self::client_platform())
-            .header("X-Riot-ClientVersion", self.client_version().await?)
+            .header("X-Riot-ClientPlatform", &self.config.client_platform)
+            .header("X-Riot-ClientVersion", &self.config.client_version)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -117,7 +100,7 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .header("X-Riot-ClientPlatform", &self.config.client_platform)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -135,7 +118,7 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientVersion", self.client_version().await?)
+            .header("X-Riot-ClientVersion", &self.config.client_version)
             .send()
             .await
             .map_err(anyhow::Error::from)?;
@@ -150,7 +133,7 @@ impl ValorantClient {
 
         let request = self.create_base_request(method, url);
         let response = request
-            .header("X-Riot-ClientPlatform", Self::client_platform())
+            .header("X-Riot-ClientPlatform", &self.config.client_platform)
             .send()
             .await
             .map_err(anyhow::Error::from)?;

@@ -1,4 +1,5 @@
 use anyhow::{ Result, anyhow };
+use base64::{engine::general_purpose::STANDARD, Engine};
 use crate::api_config::ApiConfig;
 use crate::endpoint::BaseUrls;
 use reqwest::{ Client as HttpClient, ClientBuilder, Method, RequestBuilder };
@@ -14,7 +15,22 @@ pub struct ValorantClient {
 }
 
 impl ValorantClient {
-    pub fn new() -> Result<Self> {
+    pub(crate) async fn client_version() -> Result<String> {
+        let res = Self::get_version().await?;
+        Ok(res.data.riot_client_version)
+    }
+
+    pub(crate) fn client_platform() -> String {
+        let client_platform = r#"{
+            "platformType": "PC",
+            "platformOS": "Windows",
+            "platformOSVersion": "10.0.19042.1.256.64bit",
+            "platformChipset": "Unknown"
+        }"#;
+        STANDARD.encode(client_platform)
+    }
+
+    pub async fn new() -> Result<Self> {
         let (lockfile_password, port) = Self::extract_lockfile_content()
             .ok_or(anyhow!("Unable to extract lockfile content"))?;
         let (region, shard) = Self::extract_region_and_shard().ok_or(anyhow!("Unable to extract region and shard from ShooterGame.log"))?;
@@ -24,16 +40,18 @@ impl ValorantClient {
             pd: format!("https://pd.{}.a.pvp.net", shard),
             glz: format!("https://glz-{}-1.{}.a.pvp.net", region, shard),
             localhost: format!("https://127.0.0.1:{}", port),
-            valorant_api: String::from("https://valorant-api.com"),
         };
 
         let client = ClientBuilder::new()
             .danger_accept_invalid_certs(true)
             .build()?;
 
+
+        let client_version = Self::client_version().await?;
+        let client_platform = Self::client_platform();
         Ok(ValorantClient {
             client,
-            config: ApiConfig { region, shard, port, base_urls, lockfile_password, entitlement_token: String::new(), auth_token: String::new(), puuid: String::new()}
+            config: ApiConfig { region, shard, port, base_urls, lockfile_password, entitlement_token: String::new(), client_version, client_platform, auth_token: String::new(), puuid: String::new()}
         })
     }
 

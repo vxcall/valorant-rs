@@ -8,8 +8,8 @@ use super::entitlements_token::EntitlementsTokenResponse;
 use super::sessions::SessionsResponse;
 
 impl ValorantClient {
-    /// init_tokens initializes the auth token and entitlement token.
-    pub async fn init_tokens(mut self) -> Result<Self> {
+    /// local_authentication initializes the auth token and entitlement token.
+    pub async fn get_entitlements_token(&self) -> Result<EntitlementsTokenResponse> {
         let endpoint = Endpoint::EntitlementsToken;
         let (_, url) = endpoint.url(&self.config);
         let header_value = format!(
@@ -28,11 +28,7 @@ impl ValorantClient {
             .await
             .map_err(|e| anyhow::Error::from(e))?;
 
-        self.config.entitlement_token = token_response.entitlement_token;
-        self.config.auth_token = token_response.auth_token;
-        self.config.puuid = token_response.puuid;
-
-        Ok(self)
+        Ok(token_response)
     }
 
     pub async fn get_sessions(&self) -> Result<SessionsResponse> {
@@ -51,7 +47,7 @@ impl ValorantClient {
             .json::<SessionsResponse>()
             .await
             .map_err(|e| anyhow::Error::from(e))?;
-        
+
         Ok(response)
     }
 }

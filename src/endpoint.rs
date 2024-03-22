@@ -1,7 +1,7 @@
 use crate::api_config::ApiConfig;
 use reqwest::Method;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct BaseUrls {
     pub shared: String,
     pub pd: String,
@@ -70,6 +70,9 @@ pub(crate) enum Endpoint<'a> {
 
     EntitlementsToken,
     Sessions,
+
+    AuthCookies,
+    AuthRequest,
 
     Agents,
     Version,
@@ -243,6 +246,12 @@ impl<'a> Endpoint<'a> {
             },
             Endpoint::Sessions => {
                 (Method::GET, format!("{}/product-session/v1/external-sessions", config.base_urls.localhost))
+            },
+            Endpoint::AuthCookies => {
+                (Method::POST, String::from("https://auth.riotgames.com/api/v1/authorization"))
+            },
+            Endpoint::AuthRequest => {
+                (Method::PUT, String::from("https://auth.riotgames.com/api/v1/authorization"))
             },
             _ => (Method::GET, String::new())
         }

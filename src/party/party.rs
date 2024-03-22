@@ -6,9 +6,7 @@ use super::models::party::PartyResponse;
 use super::party_player::PartyPlayerResponse;
 
 impl ValorantClient {
-
     pub async fn party(&self, party_id: &str) -> Result<PartyResponse> {
-
         let endpoint = Endpoint::Party { party_id };
         let (method, url) = endpoint.url(&self.config);
 
@@ -21,7 +19,6 @@ impl ValorantClient {
     }
 
     pub async fn party_player(&self) -> Result<PartyPlayerResponse> {
-
         let endpoint = Endpoint::PartyPlayer;
         let (method, url) = endpoint.url(&self.config);
 
@@ -38,7 +35,6 @@ impl ValorantClient {
     }
 
     pub async fn remove_party_player(&self) -> Result<()> {
-
         let endpoint = Endpoint::PartyRemovePlayer;
         let (method, url) = endpoint.url(&self.config);
 
@@ -49,7 +45,6 @@ impl ValorantClient {
     }
 
     pub async fn refresh_competitive_tier(&self, party_id: &str) -> Result<()> {
-
         let endpoint = Endpoint::RefreshCompetitiveTier { party_id };
         let (method, url) = endpoint.url(&self.config);
 
@@ -60,7 +55,6 @@ impl ValorantClient {
     }
 
     pub async fn refresh_player_identity(&self, party_id: &str) -> Result<()> {
-
         let endpoint = Endpoint::RefreshPlayerIdentity { party_id };
         let (method, url) = endpoint.url(&self.config);
 
@@ -71,7 +65,6 @@ impl ValorantClient {
     }
 
     pub async fn refresh_pings(&self, party_id: &str) -> Result<()> {
-
         let endpoint = Endpoint::RefreshPings { party_id };
         let (method, url) = endpoint.url(&self.config);
 
@@ -80,7 +73,6 @@ impl ValorantClient {
 
         Ok(())
     }
-
     /*
         let request = self.create_base_request(method, url);
         let response = request

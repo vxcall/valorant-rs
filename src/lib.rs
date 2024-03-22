@@ -8,5 +8,6 @@ pub mod pre_game;
 pub mod current_game;
 pub mod local;
 pub mod general_api;
+pub mod authentication;
 
 pub use client::ValorantClient;

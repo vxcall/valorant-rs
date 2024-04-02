@@ -1,16 +1,7 @@
-# Valorant-rs
+# valorant-rs
 
-A crate which offers unofficial valorant api client written in Rust.
-use this when, for instance, u want to crate a valorant discord bot in Rust.
-
-## am i getting banned?
-You most likely not. I've been using these endpoints too while developing but never experienced a ban, so most likely you are safe as long as you dont spam it or abuse it.
-
-HOWEVER specifically for pre_game::select_character and pre_game::lock_character, use these APIs to instalock agents may get you banned. Riot doesnt like it, beware of it.
-
-## endpoints coverage
-
-These are just one chunk of unofficial apis, and I may haveta cover official ones as well.
+I let this incomplete because the remote auth endpoint is unavailable currently
+local authentication is valid tho.
 
 XMPP
 - [ ] TCP XMPP Connection

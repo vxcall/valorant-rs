@@ -1,7 +1,9 @@
 # valorant-rs
 
-I let this incomplete because the remote auth endpoint is unavailable currently
-local authentication is valid tho.
+valorant API implemented in pure rust.
+
+The authentication API require MFA as of right now to hinder unofficial APIs from accessing the riot server.
+There're various ways to circumvent it, for instance discord bot called VALOBot publishes its browser extension that stole valorant cookie from your browser and re-use it in its API header. Not to mention, the extension requires you to login to riot's valorant website beforehand.
 
 XMPP
 - [ ] TCP XMPP Connection
